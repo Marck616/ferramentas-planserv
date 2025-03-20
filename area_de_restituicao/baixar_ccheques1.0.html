@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="google-adsense-account" content="ca-pub-7166056342958503">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <title>Abertura Automática de Links e Busca de Rubricas</title>
+    <link rel="icon" href="../imagens/icon2.png" type="image/png">
+    <style>
+        button {
+            background-color: #87CEFA !important;
+        }
+    </style>
+    <script src="../mia.js"></script>
+    <script src="javascript/baixar_ccheques1.0.js" defer></script>
+    <script src="javascript/busca_rubricas.js" defer></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7166056342958503"
+     crossorigin="anonymous"></script>    
+</head>
+<body>
+    <h1>Downloader de Contracheques</h1>
+    <h2>Instruções:</h2>
+    <ol>
+        <li>Primeiramente, faça login no site do <a href="https://rhbahia.ba.gov.br/" target="_blank">RH Bahia</a>. É importante permanecer logado até terminar de baixar os contracheques.</li>
+        <li>Sugerimos que separe uma aba somente para esta ferramenta, para evitar confusão com as abas que serão abertas.</li>
+        <li>Na primeira tentativa, o navegador irá bloquear a abertura das abas. É importante voltar na aba de incluir a matrícula, permitir a abertura das abas e clicar em "Abrir Links" novamente.</li>
+    </ol>
+    <input type="text" id="matricula" placeholder="Insira a matrícula aqui">
+    <h3>Abertura avançada:</h3>
+    <input type="number" id="anoInicio" placeholder="Ano de início (ex: 2019)" min="2019" max="2025">
+    <input type="number" id="mesInicio" placeholder="Mês de início (ex: 1 para Janeiro)" min="1" max="12">
+    <input type="number" id="anoFim" placeholder="Ano de fim (ex: 2025)" min="2019" max="2025">
+    <input type="number" id="mesFim" placeholder="Mês de fim (ex: 12 para Dezembro)" min="1" max="12">
+    <button onclick="abrirLinks()">Abrir Links</button>
+    <h3>Selecione o mês:</h3>
+    <div id="teclado">
+        <!-- Botões para cada mês -->
+        <button onclick="abrirMes(1)">01</button>
+        <button onclick="abrirMes(2)">02</button>
+        <button onclick="abrirMes(3)">03</button>
+        <button onclick="abrirMes(4)">04</button>
+        <button onclick="abrirMes(5)">05</button>
+        <button onclick="abrirMes(6)">06</button>
+        <button onclick="abrirMes(7)">07</button>
+        <button onclick="abrirMes(8)">08</button>
+        <button onclick="abrirMes(9)">09</button>
+        <button onclick="abrirMes(10)">10</button>
+        <button onclick="abrirMes(11)">11</button>
+        <button onclick="abrirMes(12)">12</button>
+    </div>
+
+    <h1>Busca de Rubricas</h1>
+    <input type="text" id="search" placeholder="Digite a rubrica">
+    <button onclick="search()">Buscar</button>
+    <p id="result"></p>
+
+    <p style="font-size: small; text-align: right;">Criado por Marcos Oliveira</p>
+</body>
+</html>

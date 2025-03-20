@@ -1,0 +1,379 @@
+    <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta name="google-adsense-account" content="ca-pub-7166056342958503">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <title>Calculadora de Planilhas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            transition: background-color 0.3s ease;
+            color: black;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .nao-copiavel {
+            user-select: none;
+            pointer-events: none;
+            color: #999;
+        }
+/* Classe para aplicar um fundo azul claro (usada na Tabela 1) */
+        .tabela1 {
+    background: #a6d5f7 !important; /* Azul claro */
+    background-size: auto !important; /* Remove o tamanho do gradiente */
+    animation: none !important; /* Remove a animação */
+}
+
+/* Classe para aplicar um fundo verde claro (usada na Tabela 2) */
+        .tabela2 {
+    background: #b7e1a1 !important; /* Verde claro */
+    background-size: auto !important; /* Remove o tamanho do gradiente */
+    animation: none !important; /* Remove a animação */
+}
+
+/* Classe para aplicar um fundo laranja claro (usada na Tabela 3) */
+        .tabela3 {
+    background: #f6b26b !important; /* Laranja claro */
+    background-size: auto !important; /* Remove o tamanho do gradiente */
+    animation: none !important; /* Remove a animação */
+}
+        
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7166056342958503"
+     crossorigin="anonymous"></script>
+</head>
+<body id="body">
+    <h1 id="titulo">Calculadora de Planilhas</h1>
+    <label for="tabela">Selecione a tabela:</label>
+    <select id="tabela" onchange="mudarTabela()">
+        <option value="1">LEI Nº 13.450 DE 26 DE OUTUBRO DE 2015 - Finaliza em 12/2021</option>
+        <option value="2">LEI Nº 14.405 DE 22 DE DEZEMBRO DE 2021 - Tabela de 01/2022 a 05/2023</option>
+        <option value="3" selected>LEI Nº 14.570 DE 23 DE MAIO DE 2023 - Tabela de 06/2023 - ATUAL</option>
+    </select>
+
+    <label for="valores">Cole os valores (com ou sem datas):</label>
+    <textarea id="valores" placeholder="Exemplo com datas:
+06/2023	19482,85
+07/2023	18472,69
+08/2023	20833,63
+
+Exemplo sem datas:
+19482,85
+18472,69
+20833,63"></textarea>
+
+    <button onclick="calcular('titular')">Calcular Titular</button>
+    <button onclick="calcular('conjuge')">Calcular Cônjuge</button>
+    <button onclick="calcular('dependente')">Calcular Dependente</button>
+    <button onclick="calcular('agregado-jovem')">Calcular Agregado Jovem</button>
+    <button onclick="calcular('plano-especial')">Calcular Plano Especial</button>
+    <button onclick="calcular('patronal')">Calcular Patronal</button>
+
+    <h2>Resultados</h2>
+    <table id="resultados">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Resultados serão exibidos aqui -->
+        </tbody>
+    </table>
+
+    <script>
+        // Tabela 1: LEI Nº 13.450 DE 26 DE OUTUBRO DE 2015 - Finaliza em 12/2021
+        const limitesTitular1 = [350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250, 2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750, 8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250, 16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250];
+        const valoresTitular1 = [26.00, 36.00, 46.00, 50.70, 59.80, 68.90, 78.00, 87.10, 96.20, 105.30, 114.40, 123.50, 132.60, 141.70, 150.80, 159.90, 169.00, 178.10, 187.20, 196.30, 205.40, 214.50, 223.60, 232.70, 241.80, 250.90, 260.00, 269.10, 278.20, 287.30, 296.40, 305.50, 314.60, 323.70, 332.80, 341.90, 351.00, 360.10, 369.20, 378.30, 387.40, 396.50, 405.60, 414.70, 423.80, 432.90, 442.00, 451.10, 460.20, 469.30, 478.40, 487.50, 496.60, 505.70, 514.80, 523.90, 533.00, 542.10, 551.20, 560.30, 569.40, 578.50, 587.60, 596.70, 605.80, 614.90, 624.00, 633.10, 642.20];
+
+        //Conjuge incluida 1
+        const limitesConjuge1 = [350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250, 2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750, 8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250, 16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250];
+        const valoresConjuge1 = [13.00, 18.00, 23.00, 25.35, 29.90, 34.45, 39.00, 43.55, 48.10, 52.65, 57.20, 61.75, 66.30, 70.85, 75.40, 79.95, 84.50, 89.05, 93.60, 98.15, 102.70, 107.25, 111.80, 116.35, 120.90, 125.45, 130.00, 134.55, 139.10, 143.65, 148.20, 152.75, 157.30, 161.85, 166.40, 170.95, 175.50, 180.05, 184.60, 189.15, 193.70, 198.25, 202.80, 207.35, 211.90, 216.45, 221.00, 225.55, 230.10, 234.65, 239.20, 243.75, 248.30, 252.85, 257.40, 261.95, 266.50, 271.05, 275.60, 280.15, 284.70, 289.25, 293.80, 298.35, 302.90, 307.45, 312.00, 316.55, 321.10];
+        
+        const limitesDependente1 = [350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250, 2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750, 8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250, 16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250];
+        const valoresDependente1 = [5.72, 7.92, 10.12, 11.15, 13.16, 15.16, 17.16, 19.16, 21.16, 23.17, 25.17, 27.17, 29.17, 31.17, 33.18, 35.18, 37.18, 39.18, 41.18, 43.19, 45.19, 47.19, 49.19, 51.19, 53.20, 55.20, 57.20, 59.20, 61.20, 63.21, 65.21, 67.21, 69.21, 71.21, 73.22, 75.22, 77.22, 79.22, 81.22, 83.23, 85.23, 87.23, 89.23, 91.23, 93.24, 95.24, 97.24, 99.24, 101.24, 103.25, 105.25, 107.25, 109.25, 111.25, 113.26, 115.26, 117.26, 119.26, 121.26, 123.27, 125.27, 127.27, 129.27, 131.27, 133.28, 135.28, 137.28, 139.28, 141.28];
+
+        // Tabela 2: LEI Nº 14.405 DE 22 DE DEZEMBRO DE 2021 - Tabela de 01/2022 a 05/2023
+        const limitesTitular2 = [350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250, 2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750, 8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250, 16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250];
+        const valoresTitular2 = [27.04, 37.44, 47.84, 52.73, 62.19, 71.66, 81.12, 90.58, 100.05, 109.51, 118.98, 128.44, 137.90, 147.37, 156.83, 166.30, 175.76, 185.22, 194.69, 204.15, 213.62, 223.08, 232.54, 242.01, 251.47, 260.94, 270.40, 279.86, 289.33, 298.79, 308.26, 317.72, 327.18, 336.65, 346.11, 355.58, 365.04, 374.50, 383.97, 393.43, 402.90, 412.36, 421.82, 431.29, 440.75, 450.22, 459.68, 469.14, 478.61, 488.07, 497.54, 507.00, 516.46, 525.93, 535.39, 544.86, 554.32, 563.78, 573.25, 582.71, 592.18, 601.64, 611.10, 620.57, 630.03, 639.50, 648.96, 658.42, 667.89];
+
+        //Conjuge incluida 2
+        const limitesConjuge2 = [350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250, 2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750, 8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250, 16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250];
+        const valoresConjuge2 = [
+    13.52, 18.72, 23.92, 26.36, 31.10, 35.83, 40.56, 45.29, 50.02, 54.76,
+    59.49, 64.22, 68.95, 73.68, 78.42, 83.15, 87.88, 92.61, 97.34, 102.08,
+    106.81, 111.54, 116.27, 121.00, 125.74, 130.47, 135.20, 139.93, 144.66,
+    149.40, 154.13, 158.86, 163.59, 168.32, 173.06, 177.79, 182.52, 187.25,
+    191.98, 196.72, 201.45, 206.18, 210.91, 215.64, 220.38, 225.11, 229.84,
+    234.57, 239.30, 244.04, 248.77, 253.50, 257.23, 262.96, 267.70, 272.43,
+    277.16, 281.89, 286.62, 291.36, 296.09, 300.82, 305.55, 310.28, 315.02,
+    319.75, 324.48, 329.21, 333.94
+];
+        
+        
+        const limitesDependente2 = [350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250, 2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750, 8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250, 16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250];
+        const valoresDependente2 = [5.95, 8.24, 10.52, 11.60, 13.69, 15.77, 17.85, 19.93, 22.01, 24.10, 26.18, 28.26, 30.34, 32.42, 34.51, 36.59, 38.67, 40.75, 42.83, 44.92, 47.00, 49.08, 51.16, 53.24, 55.33, 57.41, 59.49, 61.57, 63.65, 65.74, 67.82, 69.90, 71.98, 74.06, 76.15, 78.23, 80.31, 82.39, 84.47, 86.56, 88.64, 90.72, 92.80, 94.88, 96.97, 99.05, 101.13, 103.21, 105.29, 107.38, 109.46, 111.54, 113.62, 115.70, 117.79, 119.87, 121.95, 124.03, 126.11, 128.20, 130.28, 132.36, 134.44, 136.52, 138.61, 140.69, 142.77, 144.85, 146.93];
+
+        // Tabela 3: LEI Nº 14.570 DE 23 DE MAIO DE 2023 - Tabela de 06/2023 - ATUAL (já existente)
+        const limitesTitular3 = [350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250, 2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750, 8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250, 16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250, 22750];
+        const valoresTitular3 = [28.12, 38.94, 49.75, 54.84, 64.68, 74.52, 84.36, 94.21, 104.05, 113.89, 123.74, 133.58, 143.42, 153.26, 163.11, 172.95, 182.79, 192.63, 202.48, 212.32, 222.16, 232.00, 241.85, 251.69, 261.53, 271.37, 281.22, 291.06, 300.90, 310.74, 320.59, 330.43, 340.27, 350.11, 359.96, 369.80, 379.64, 389.48, 399.33, 409.17, 419.01, 428.85, 438.70, 465.79, 476.01, 486.23, 496.45, 506.68, 516.90, 527.12, 537.34, 547.56, 557.78, 568.00, 578.22, 588.44, 598.67, 608.89, 619.11, 629.33, 639.55, 649.77, 659.99, 670.21, 680.43, 690.66, 700.88, 711.10, 721.32];
+
+        //Conjuge incluida 3
+        const limitesConjuge3 = [
+    350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250,
+    2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750,
+    8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250,
+    16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250, 22750];
+        const valoresConjuge3 = [
+    14.06, 19.47, 24.88, 27.42, 32.34, 37.26, 42.18, 47.10, 52.02, 56.95,
+    61.87, 66.79, 71.71, 76.63, 81.55, 86.47, 91.40, 96.32, 101.24, 106.16,
+    111.08, 116.00, 120.92, 125.84, 130.77, 135.69, 140.61, 145.53, 150.45,
+    155.37, 160.29, 165.21, 170.14, 175.06, 179.98, 184.90, 189.82, 194.74,
+    199.66, 204.58, 209.51, 214.43, 219.35, 232.90, 238.01, 234.11, 248.23,
+    253.34, 258.45, 263.56, 268.67, 273.78, 278.89, 284.00, 289.11, 294.22,
+    299.33, 304.44, 309.55, 314.66, 319.78, 324.89, 330.00, 335.11, 340.22,
+    345.33, 350.44, 355.55, 360.66
+];
+        
+        const limitesDependente3 = [350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250, 2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750, 8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250, 16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250, 22750];
+        const valoresDependente3 = [6.19, 8.57, 10.95, 12.06, 14.23, 16.40, 18.56, 20.72, 22.89, 25.06, 27.22, 29.39, 31.55, 33.71, 35.89, 38.05, 40.21, 42.38, 44.54, 46.71, 48.88, 51.04, 53.20, 55.37, 57.54, 59.70, 61.87, 64.03, 66.19, 68.37, 70.53, 72.69, 74.86, 77.02, 79.19, 81.36, 83.52, 85.68, 87.85, 90.02, 92.18, 94.35, 96.51, 102.47, 104.73, 103.01, 109.22, 111.47, 113.71, 115.97, 118.22, 120.46, 122.71, 124.96, 127.21, 129.46, 131.71, 133.95, 136.20, 138.46, 140.70, 142.95, 145.20, 147.44, 149.70, 151.95, 154.19, 156.44, 158.69];
+
+        // Variáveis globais para armazenar a tabela selecionada
+        let limitesTitularAtual = limitesTitular3;
+        let valoresTitularAtual = valoresTitular3;
+        
+        //Conjuge incluida
+        let limitesConjugeAtual = limitesConjuge3;
+        let valoresConjugeAtual = valoresConjuge3;
+        
+        let limitesDependenteAtual = limitesDependente3;
+        let valoresDependenteAtual = valoresDependente3;
+        
+        let valorAgregadoJovemAtual = 75.91; // Valor inicial para a Tabela 3
+
+        // Função para mudar a tabela selecionada
+        function mudarTabela() {
+            const tabelaSelecionada = document.getElementById('tabela').value;
+            const body = document.getElementById('body');
+            const titulo = document.getElementById('titulo');
+
+            if (tabelaSelecionada === '1') {
+                limitesTitularAtual = limitesTitular1;
+                valoresTitularAtual = valoresTitular1;
+
+                //Conjuge incluida
+                limitesConjugeAtual = limitesConjuge1;
+                valoresConjugeAtual = valoresConjuge1;
+                
+                limitesDependenteAtual = limitesDependente1;
+                valoresDependenteAtual = valoresDependente1;
+                valorAgregadoJovemAtual = 70.18; // Valor para a Tabela 1
+                body.className = 'tabela1';
+                titulo.textContent = 'LEI Nº 13.450 DE 26 DE OUTUBRO DE 2015 - Finaliza em 12/2021';
+            } else if (tabelaSelecionada === '2') {
+                limitesTitularAtual = limitesTitular2;
+                valoresTitularAtual = valoresTitular2;
+
+                //Conjuge incluida
+                limitesConjugeAtual = limitesConjuge2;
+                valoresConjugeAtual = valoresConjuge2;
+                
+                limitesDependenteAtual = limitesDependente2;
+                valoresDependenteAtual = valoresDependente2;
+                valorAgregadoJovemAtual = 72.99; // Valor para a Tabela 2
+                body.className = 'tabela2';
+                titulo.textContent = 'LEI Nº 14.405 DE 22 DE DEZEMBRO DE 2021 - Tabela de 01/2022 a 05/2023';
+            } else if (tabelaSelecionada === '3') {
+                limitesTitularAtual = limitesTitular3;
+                valoresTitularAtual = valoresTitular3;
+
+                //Conjuge incluida
+                limitesConjugeAtual = limitesConjuge3;
+                valoresConjugeAtual = valoresConjuge3;
+                
+                limitesDependenteAtual = limitesDependente3;
+                valoresDependenteAtual = valoresDependente3;
+                valorAgregadoJovemAtual = 75.91; // Valor para a Tabela 3
+                body.className = 'tabela3';
+                titulo.textContent = 'LEI Nº 14.570 DE 23 DE MAIO DE 2023 - Tabela de 06/2023 - ATUAL';
+            }
+        }
+
+        // Função para converter o valor do formato brasileiro para número
+        function converterValor(valor) {
+            return parseFloat(valor.replace(/\./g, '').replace(',', '.'));
+        }
+
+        // Função para calcular o valor do Titular
+        function calcularTitular(valor) {
+            for (let i = 0; i < limitesTitularAtual.length; i++) {
+                if (valor <= limitesTitularAtual[i]) {
+                    return valoresTitularAtual[i];
+                }
+            }
+            return valoresTitularAtual[valoresTitularAtual.length - 1];
+        }
+
+
+        //Conjuge incluida
+        function calcularConjuge(valor) {
+            for (let i = 0; i < limitesConjugeAtual.length; i++) {
+                if (valor <= limitesConjugeAtual[i]) {
+                    return valoresConjugeAtual[i];
+                }
+            }
+            return valoresConjugeAtual[valoresConjugeAtual.length - 1];
+        }
+
+
+    
+        // Função para calcular o valor do Cônjuge (metade do Titular) DESATIVADA
+        // function calcularConjuge(valor) {
+        //    return calcularTitular(valor) / 2;
+        //}
+
+        // Função para calcular o valor do Dependente
+        function calcularDependente(valor) {
+            for (let i = 0; i < limitesDependenteAtual.length; i++) {
+                if (valor <= limitesDependenteAtual[i]) {
+                    return valoresDependenteAtual[i];
+                }
+            }
+            return valoresDependenteAtual[valoresDependenteAtual.length - 1];
+        }
+
+        // Função para calcular o valor do Agregado Jovem (depende da tabela selecionada)
+        function calcularAgregadoJovem() {
+            return valorAgregadoJovemAtual;
+        }
+
+        // Função para calcular o valor do Plano Especial (sempre 65,00)
+        function calcularPlanoEspecial() {
+            return 65.00;
+        }
+
+        // Função para calcular o valor do Patronal (5% do valor incluso)
+        function calcularPatronal(valor) {
+            return valor * 0.05;
+        }
+
+        // Função para calcular os resultados
+        function calcular(tipo) {
+            const valoresInput = document.getElementById('valores').value.trim();
+            const linhas = valoresInput.split('\n');
+            const resultados = [];
+
+            // Verifica se a primeira linha contém uma data
+            const contemData = linhas[0].includes('/');
+
+            // Processa cada linha
+            linhas.forEach(linha => {
+                let data = null;
+                let valor = null;
+
+                if (contemData) {
+                    // Separa a data e o valor
+                    const partes = linha.split('\t');
+                    data = partes[0];
+                    valor = partes[1];
+                } else {
+                    // Apenas o valor
+                    valor = linha;
+                }
+
+                // Converte o valor para número
+                const valorNumerico = converterValor(valor);
+
+                // Calcula o resultado com base no tipo
+                let resultado = 0;
+                switch (tipo) {
+                    case 'titular':
+                        resultado = calcularTitular(valorNumerico);
+                        break;
+                    case 'conjuge':
+                        resultado = calcularConjuge(valorNumerico);
+                        break;
+                    case 'dependente':
+                        resultado = calcularDependente(valorNumerico);
+                        break;
+                    case 'agregado-jovem':
+                        resultado = calcularAgregadoJovem();
+                        break;
+                    case 'plano-especial':
+                        resultado = calcularPlanoEspecial();
+                        break;
+                    case 'patronal':
+                        resultado = calcularPatronal(valorNumerico);
+                        break;
+                    default:
+                        resultado = 0;
+                }
+
+                // Se houver data, desloca um mês à frente
+                if (contemData) {
+                    const [mes, ano] = data.split('/');
+                    const dataObj = new Date(ano, mes - 1); // Mês começa em 0 no JavaScript
+                    dataObj.setMonth(dataObj.getMonth() + 1); // Adiciona um mês
+                    const novoMes = String(dataObj.getMonth() + 1).padStart(2, '0');
+                    const novoAno = dataObj.getFullYear();
+                    data = `${novoMes}/${novoAno}`;
+                }
+
+                // Adiciona o resultado ao array
+                resultados.push({ data, valor: resultado });
+            });
+
+            // Exibe os resultados na tabela
+            const tbody = document.querySelector('#resultados tbody');
+            tbody.innerHTML = ''; // Limpa o conteúdo anterior
+
+            resultados.forEach(resultado => {
+                const row = document.createElement('tr');
+                if (contemData) {
+                    row.innerHTML = `
+                        <td class="nao-copiavel">${resultado.data}</td>
+                        <td>${resultado.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    `;
+                } else {
+                    row.innerHTML = `<td>${resultado.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>`;
+                }
+                tbody.appendChild(row);
+            });
+
+            // Previne a cópia da coluna de data
+            const colunasData = document.querySelectorAll('.nao-copiavel');
+            colunasData.forEach(coluna => {
+                coluna.addEventListener('copy', (e) => {
+                    e.preventDefault(); // Impede a cópia
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7166056342958503"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Valores</title>
+    <style>
+        .idade-container {
+            margin-bottom: 10px;
+        }
+        .idade-container input {
+            margin-right: 10px;
+        }
+        .resultado-container {
+            margin-bottom: 10px;
+        }
+        .resultado-container button {
+            margin-left: 10px;
+        }
+        .calculo-container {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .mes-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .mes-container > div {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+        .mes-container > div:last-child {
+            margin-right: 0;
+        }
+        .mes-container h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculadora de Valores</h1>
+    <button onclick="adicionarMes()">Incluir mês +</button>
+    <div id="meses-container">
+        <!-- Os meses serão adicionados aqui -->
+    </div>
+
+    <div id="calculo-total-container">
+        <!-- Os cálculos e totais de cada mês serão exibidos aqui -->
+    </div>
+
+    <script>
+        let contadorMeses = 0; // Contador para gerar IDs únicos para os meses
+        let meses = []; // Array para armazenar os dados de cada mês
+
+        // Função para adicionar um novo mês
+        function adicionarMes() {
+            contadorMeses++;
+            const novoMes = `
+                <div class="mes-container">
+                    <div>
+                        <h3>Mês ${contadorMeses}</h3>
+                        <label for="mes${contadorMeses}">Selecione o mês:</label>
+                        <select id="mes${contadorMeses}">
+                            <option value="01">Mês 01</option>
+                            <option value="02">Mês 02</option>
+                            <option value="03">Mês 03</option>
+                            <option value="04">Mês 04</option>
+                            <option value="05">Mês 05</option>
+                            <option value="06">Mês 06</option>
+                            <option value="07">Mês 07</option>
+                            <option value="08">Mês 08</option>
+                            <option value="09">Mês 09</option>
+                            <option value="10">Mês 10</option>
+                            <option value="11">Mês 11</option>
+                            <option value="12">Mês 12</option>
+                        </select>
+                        <br><br>
+                        <label for="valor${contadorMeses}">Insira o valor:</label>
+                        <input type="text" id="valor${contadorMeses}" placeholder="Digite o valor (ex: 1.520,00)">
+                        <br><br>
+                        <div id="idades-container${contadorMeses}">
+                            <div class="idade-container">
+                                <label for="idade${contadorMeses}_1">Insira a idade:</label>
+                                <input type="number" id="idade${contadorMeses}_1" placeholder="Digite a idade">
+                                <button onclick="adicionarIdade(${contadorMeses})">+</button>
+                            </div>
+                        </div>
+                        <br>
+                        <button onclick="calcularMes(${contadorMeses})">Calcular Mês ${contadorMeses}</button>
+                    </div>
+                    <div id="resultados-container${contadorMeses}">
+                        <!-- Resultados do mês serão exibidos aqui -->
+                    </div>
+                </div>
+            `;
+            document.getElementById('meses-container').insertAdjacentHTML('beforeend', novoMes);
+            meses.push({ id: contadorMeses, calculo: [], total: 0 });
+        }
+
+        // Função para adicionar um novo campo de idade
+        function adicionarIdade(mesId) {
+            const contadorIdades = document.querySelectorAll(`#idades-container${mesId} .idade-container`).length + 1;
+            const novoCampo = `
+                <div class="idade-container">
+                    <label for="idade${mesId}_${contadorIdades}">Insira a idade:</label>
+                    <input type="number" id="idade${mesId}_${contadorIdades}" placeholder="Digite a idade">
+                </div>
+            `;
+            document.getElementById(`idades-container${mesId}`).insertAdjacentHTML('beforeend', novoCampo);
+        }
+
+        // Função para converter o valor do formato brasileiro para número
+        function converterValor(valor) {
+        // Remove os pontos (separadores de milhar) e substitui a vírgula (separador decimal) por ponto
+             return parseFloat(valor.replace(/\./g, '').replace(',', '.'));
+}
+
+        // Função para calcular o Resultado 6 (Parcela de Risco) com base na idade
+        function calcularResultado6(idade) {
+            if (idade >= 0 && idade <= 24) {
+                return 89.74;
+            } else if (idade >= 25 && idade <= 29) {
+                return 144.69;
+            } else if (idade >= 30 && idade <= 39) {
+                return 183.24;
+            } else if (idade >= 40 && idade <= 49) {
+                return 208.35;
+            } else if (idade >= 50 && idade <= 59) {
+                return 287.12;
+            } else if (idade >= 60) {
+                return 588.39;
+            } else {
+                return 0; // Caso a idade seja inválida
+            }
+        }
+
+        // Função para incluir um valor no cálculo de um mês específico
+        function incluirNoCalculo(valor, nome, mesId) {
+            const mes = meses.find(m => m.id === mesId);
+            if (nome === "Titular" || nome === "Cônjuge" || nome === "Patronal" || nome.startsWith("Parcela de Risco")) {
+                // Verifica se o valor já foi incluído
+                if (mes.calculo.some(item => item.nome === nome)) {
+                    alert(`${nome} já foi incluído no cálculo do mês ${mesId}.`);
+                    return;
+                }
+            }
+            mes.calculo.push({ nome, valor });
+            mes.total += valor;
+            atualizarCalculo();
+        }
+
+        // Função para atualizar o cálculo e o total de todos os meses
+        function atualizarCalculo() {
+            const calculoTotalContainer = document.getElementById('calculo-total-container');
+            calculoTotalContainer.innerHTML = ''; // Limpa o conteúdo anterior
+
+            let valorTotal = 0;
+
+            meses.forEach(mes => {
+                const calculoMes = mes.calculo.map(item => `${item.nome}: ${item.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`).join(" + ");
+                const totalMes = mes.total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                calculoTotalContainer.insertAdjacentHTML('beforeend', `
+                    <div class="calculo-container">
+                        <p>Cálculo mês ${mes.id}: ${calculoMes}</p>
+                        <p>Total mês ${mes.id}: ${totalMes}</p>
+                    </div>
+                `);
+
+                valorTotal += mes.total;
+            });
+
+            // Exibe o valor total de todos os meses
+            calculoTotalContainer.insertAdjacentHTML('beforeend', `
+                <div class="calculo-container">
+                    <p>Valor Total: ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                </div>
+            `);
+        }
+
+        // Função para calcular os resultados de um mês específico
+        function calcularMes(mesId) {
+            const valorInput = document.getElementById(`valor${mesId}`).value;
+            const valor = converterValor(valorInput); // Converte o valor para número
+
+            // Limites e valores correspondentes para Resultado 1 e Resultado 4
+            const limites1 = [350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250, 2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750, 8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250, 16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250, 22750];
+            const valores1 = [28.12, 38.94, 49.75, 54.84, 64.68, 74.52, 84.36, 94.21, 104.05, 113.89, 123.74, 133.58, 143.42, 153.26, 163.11, 172.95, 182.79, 192.63, 202.48, 212.32, 222.16, 232, 241.85, 251.69, 261.53, 271.37, 281.22, 291.06, 300.9, 310.74, 320.59, 330.43, 340.27, 350.11, 359.96, 369.8, 379.64, 389.48, 399.33, 409.17, 419.01, 428.85, 438.7, 465.79, 476.01, 486.23, 496.45, 506.68, 516.9, 527.12, 537.34, 547.56, 557.78, 568, 578.22, 588.44, 598.67, 608.89, 619.11, 629.33, 639.55, 649.77, 659.99, 670.21, 680.43, 690.66, 700.88, 711.1, 721.32];
+
+            // Limites e valores correspondentes para Resultado 2
+            const limites2 = [350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250, 2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750, 8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250, 16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250, 22750];
+            const valores2 = [14.06, 19.47, 24.88, 27.42, 32.34, 37.26, 42.18, 47.1, 52.02, 56.95, 61.87, 66.79, 71.71, 76.63, 81.55, 86.47, 91.4, 96.32, 101.24, 106.16, 111.08, 116, 120.92, 125.84, 130.77, 135.69, 140.61, 145.53, 150.45, 155.37, 160.29, 165.21, 170.14, 175.06, 179.98, 184.9, 189.82, 194.74, 199.66, 204.58, 209.51, 214.43, 219.35, 232.9, 238.01, 234.11, 248.23, 253.34, 258.45, 263.56, 268.67, 273.78, 278.89, 284, 289.11, 294.22, 299.33, 304.44, 309.55, 314.66, 319.78, 324.89, 330, 335.11, 340.22, 345.33, 350.44, 355.55, 360.66];
+
+            // Limites e valores correspondentes para Resultado 3
+            const limites3 = [350, 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 1350, 1450, 1550, 1650, 1750, 1850, 1950, 2050, 2150, 2250, 2350, 2450, 2550, 2650, 2750, 2850, 2950, 3050, 3150, 3250, 3750, 4250, 4750, 5250, 5750, 6250, 6750, 7250, 7750, 8250, 8750, 9250, 9750, 10250, 10750, 11250, 11750, 12250, 12750, 13250, 13750, 14250, 14750, 15250, 15750, 16250, 16750, 17250, 17750, 18250, 18750, 19250, 19750, 20250, 20750, 21250, 21750, 22250, 22750];
+            const valores3 = [6.19, 8.57, 10.95, 12.06, 14.23, 16.4, 18.56, 20.72, 22.89, 25.06, 27.22, 29.39, 31.55, 33.71, 35.89, 38.05, 40.21, 42.38, 44.54, 46.71, 48.88, 51.04, 53.2, 55.37, 57.54, 59.7, 61.87, 64.03, 66.19, 68.37, 70.53, 72.69, 74.86, 77.02, 79.19, 81.36, 83.52, 85.68, 87.85, 90.02, 92.18, 94.35, 96.51, 102.47, 104.73, 103.01, 109.22, 111.47, 113.71, 115.97, 118.22, 120.46, 122.71, 124.96, 127.21, 129.46, 131.71, 133.95, 136.2, 138.46, 140.7, 142.95, 145.2, 147.44, 149.7, 151.95, 154.19, 156.44, 158.69];
+
+            // Função para encontrar o valor correspondente
+            function encontrarValor(valor, limites, valores) {
+                for (let i = 0; i < limites.length; i++) {
+                    if (valor <= limites[i]) {
+                        return valores[i];
+                    }
+                }
+                return valores[valores.length - 1]; // Retorna o último valor se não encontrar
+            }
+
+            // Calculando os resultados
+            const resultado1 = encontrarValor(valor, limites1, valores1);
+            const resultado2 = encontrarValor(valor, limites2, valores2);
+            const resultado3 = encontrarValor(valor, limites3, valores3);
+            const resultado4 = resultado1; // Resultado 4 é igual ao Resultado 1
+            const resultado5 = 75.91; // Resultado 5 é sempre 75,91
+            const resultado7 = valor * 0.05; // Resultado 7 é 5% do valor incluso
+            const resultado8 = valor * 0.30; // Resultado 8 é 30% do valor incluso
+            const resultado9 = 65.00; // Resultado 5 é sempre 75,91
+
+            // Formatando os resultados com vírgula como separador decimal
+            const formatoBrasileiro = {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+                useGrouping: false // Remove o separador de milhares
+            };
+
+            // Exibindo os resultados com botões "Incluir"
+            const resultadosContainer = document.getElementById(`resultados-container${mesId}`);
+            resultadosContainer.innerHTML = `
+                <div class="resultado-container">
+                    <span>Titular: ${resultado1.toLocaleString('pt-BR', formatoBrasileiro)}</span>
+                    <button onclick="incluirNoCalculo(${resultado1}, 'Titular', ${mesId})">Incluir</button>
+                </div>
+                <div class="resultado-container">
+                    <span>Cônjuge: ${resultado2.toLocaleString('pt-BR', formatoBrasileiro)}</span>
+                    <button onclick="incluirNoCalculo(${resultado2}, 'Cônjuge', ${mesId})">Incluir</button>
+                </div>
+                <div class="resultado-container">
+                    <span>Dependente: ${resultado3.toLocaleString('pt-BR', formatoBrasileiro)}</span>
+                    <button onclick="incluirNoCalculo(${resultado3}, 'Dependente', ${mesId})">Incluir</button>
+                </div>
+                <div class="resultado-container">
+                    <span>Agregado Maior: ${resultado4.toLocaleString('pt-BR', formatoBrasileiro)}</span>
+                    <button onclick="incluirNoCalculo(${resultado4}, 'Agregado Maior', ${mesId})">Incluir</button>
+                </div>
+                <div class="resultado-container">
+                    <span>Agregado Jovem: ${resultado5.toLocaleString('pt-BR', formatoBrasileiro)}</span>
+                    <button onclick="incluirNoCalculo(${resultado5}, 'Agregado Jovem', ${mesId})">Incluir</button>
+                </div>
+                <div class="resultado-container">
+                    <span>Patronal: ${resultado7.toLocaleString('pt-BR', formatoBrasileiro)}</span>
+                    <button onclick="incluirNoCalculo(${resultado7}, 'Patronal', ${mesId})">Incluir</button>
+                </div>
+                <div class="resultado-container">
+                    <span>Margem Planserv: ${resultado8.toLocaleString('pt-BR', formatoBrasileiro)}</span>
+                </div>
+                <div class="resultado-container">
+                    <span>Plano Especial: ${resultado9.toLocaleString('pt-BR', formatoBrasileiro)}</span>
+                    <button onclick="incluirNoCalculo(${resultado9}, 'Plano Especial', ${mesId})">Incluir</button>
+                </div>
+            `;
+
+            // Calculando e exibindo as Parcelas de Risco para cada idade
+            const parcelasRiscoContainer = document.createElement('div');
+            const camposIdade = document.querySelectorAll(`#idades-container${mesId} .idade-container input`);
+            camposIdade.forEach((campo, index) => {
+                const idade = parseInt(campo.value);
+                if (!isNaN(idade)) {
+                    const parcelaRisco = calcularResultado6(idade);
+                    const resultadoHTML = `
+                        <div class="resultado-container">
+                            <span>Parcela de Risco (Idade ${idade}): ${parcelaRisco.toLocaleString('pt-BR', formatoBrasileiro)}</span>
+                            <button onclick="incluirNoCalculo(${parcelaRisco}, 'Parcela de Risco (Idade ${idade})', ${mesId})">Incluir</button>
+                        </div>
+                    `;
+                    parcelasRiscoContainer.insertAdjacentHTML('beforeend', resultadoHTML);
+                }
+            });
+            resultadosContainer.appendChild(parcelasRiscoContainer);
+        }
+    </script>
+</body>
+</html>

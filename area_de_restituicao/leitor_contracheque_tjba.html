@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta name="google-adsense-account" content="ca-pub-7166056342958503">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contracheque TJBA</title>
+  <link rel="stylesheet" type="text/css" href="../style.css">
+  <script src="../mia.js"></script>
+  <script src="javascript/leitor_ccheques_tjba.js" defer></script>
+  <script src="../script.js" defer></script>
+  <style>
+    body {
+      margin: 20px;
+    }
+    
+    textarea {
+      width: 100%; 
+      height: 200px; 
+      margin-bottom: 20px;
+    }
+    
+    #results, #tables { 
+      margin-top: 20px;
+    }
+    
+    .result, .table-container {
+      margin: 15px 0; 
+      padding: 10px; 
+      border: 1px solid #ccc; 
+      border-radius: 5px; 
+    }
+    
+    .period {
+      font-weight: bold; 
+      margin-bottom: 10px; 
+    }
+    
+    table {
+      width: 100%; 
+      border-collapse: collapse; 
+      margin-top: 10px; 
+    }
+    
+    th, td {
+      border: 1px solid #ccc; 
+      padding: 8px; 
+      text-align: left; 
+    }
+    
+    .no-copy { 
+    user-select: none;
+    } /* Impede a seleção de texto */
+    
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7166056342958503"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+  <h1>Filtro de Contracheque TJBA</h1>
+  <h2>RUBRICAS:</h2>
+  <p>Inclusas ✅/ Faltantes ❌</p>
+    <ol>
+      <li>PLANO DE SAUDE DOS SERV.PUBLICOS ESTADUA (TITULAR)✅</li>
+      <li>PLANSERV ESPECIAL✅</li>
+      <li>PLANSERV AGREGADO MENOR✅</li>
+      <li>PLANSERV AGREGADO MAIOR✅</li>
+      <li>PLANSERV DEPENDENTE✅</li>
+      <li>PLANSERV CONJUGE/COMPANHEIRO (A)✅</li>
+      <li>PARCELAS DE RISCO❌</li>
+      <li>RETROATIVO❌</li>
+      <li>RESTITUIÇÃO❌</li>
+      <li>CO-PARTICIPAÇÃO PLANSERV✅</li>
+      
+    </ol>
+  <p>Sempre copie o texto usando "CRTL + A"</p>
+  <p>Insira o texto do contracheque abaixo e clique no botão para identificar os valores.</p>
+  <textarea id="inputText" placeholder="Cole aqui o texto dos contracheques..."></textarea>
+  <button onclick="parseContracheques()">Filtrar Valores</button>
+  <button onclick="parseContracheques2()">Filtrar Proventos</button>
+  <br>
+  <br>
+  <!-- Incluso um menu minimizavei para indormações e materiais de apoio -->
+  <div class="menu-container">
+        <button class="menu-toggle">☰ Material de Apoio</button>
+            <ul class="menu-list hidden">
+              <li><a href="https://docs.google.com/spreadsheets/d/1f1g1hFI_tSsJfbYtDmC4qBdgnSqBzRe6/edit?gid=960815878#gid=960815878" target="_blank"> <img src="../imagens/planilha_financeira2.png" width="100" height="100"> Modelo de Planilha Financeira - Restituição (faça uma copia). </a></li>
+              <li><a href="https://docs.google.com/spreadsheets/d/1r8sLF3AV3oBv4li8KFUHgbCdpHTzx2GsWtLkXF4yCL4/edit?gid=632666607#gid=632666607" target="_blank"> <img src="../imagens/calculadora.png" width="100" height="100"> Planilha de Cálculo - Restituição (faça uma copia).</a></li>
+              <li><a href="https://docs.google.com/document/d/1mJAWaJzSm85sELak7Q4720VhnOi-7gXf/edit" target="_blank"> <img src="../imagens/despacho.png" width="100" height="100"> Modelo de Despacho Deferimento - Restituição (faça uma copia).</a></li>
+              <li><a href="https://docs.google.com/document/d/1J57DQGl-2y4GrlweRitUjF3dqBS0Vbm9PluCs0p3odE/edit?tab=t.0" target="_blank"> <img src="../imagens/despacho.png" width="100" height="100"> Modelo de Despacho Indeferimento - Restituição (faça uma copia).</a></li>
+            </ul>
+  </div>
+  <div id="tables"></div>
+  <div id="results"></div>
+
+</body>
+</html>

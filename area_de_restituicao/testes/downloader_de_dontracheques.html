@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7166056342958503"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exibição de Contracheques</title>
+    <style>
+/* Estiliza o corpo da página */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    background-color: #f4f4f9;
+}
+
+/* Estiliza o cabeçalho */
+header {
+    margin: 20px;
+}
+
+/* Estiliza os campos de entrada */
+input[type="text"], input[type="number"] {
+    width: 200px;
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Estiliza os botões */
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Estilo para o botão ao passar o mouse */
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Estiliza o teclado */
+#teclado {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Estiliza o contêiner de PDFs */
+.pdf-container {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 2000px;
+    margin-top: 20px;
+}
+
+/* Estiliza cada item PDF */
+.pdf-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Estiliza o iframe */
+iframe {
+    border: none;
+}
+
+/* Estiliza a seção de informações do PDF */
+.pdf-info {
+    padding: 10px;
+    background: #f4f4f4;
+    border-right: 1px solid #ccc;
+}
+
+/* Contêiner de checkboxes */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.checkbox-container label {
+    margin-left: 5px;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Downloader de Contracheques</h1>
+        <h2>Instruções:</h2>
+        <ol>
+            <li>Primeiramente, faça login no site do <a href="https://rhbahia.ba.gov.br/" target="_blank" >RH Bahia</a>. É importante permanecer logado até terminar de baixar os contracheques.</li>
+            <li>Sugerimos que separe uma aba somente para esta ferramenta, para evitar confusão com as abas que serão abertas.</li>
+            <li>Na primeira tentativa, o navegador irá bloquear a abertura das abas. É importante voltar na aba de incluir a matrícula, permitir a abertura das abas e clicar em "Abrir Links" novamente.</li>
+        </ol>
+        <div>
+            <input type="text" id="matricula" placeholder="Matrícula">
+        </div>
+        <h3>Abertura avançada:</h3>
+        <div>
+            <input type="number" id="anoInicio" placeholder="Ano de início (ex: 2019)" min="2019" max="2024">
+            <input type="number" id="mesInicio" placeholder="Mês de início (ex: 1)" min="1" max="12">
+            <input type="number" id="anoFim" placeholder="Ano de fim (ex: 2024)" min="2019" max="2024">
+            <input type="number" id="mesFim" placeholder="Mês de fim (ex: 12)" min="1" max="12">
+        </div>
+        <button onclick="gerarPDFs()">Gerar PDFs</button>
+
+        <h3>Selecione o mês:</h3>
+        <div id="teclado">
+            <button onclick="abrirMes(1)">01</button>
+            <button onclick="abrirMes(2)">02</button>
+            <button onclick="abrirMes(3)">03</button>
+            <button onclick="abrirMes(4)">04</button>
+            <button onclick="abrirMes(5)">05</button>
+            <button onclick="abrirMes(6)">06</button>
+            <button onclick="abrirMes(7)">07</button>
+            <button onclick="abrirMes(8)">08</button>
+            <button onclick="abrirMes(9)">09</button>
+            <button onclick="abrirMes(10)">10</button>
+            <button onclick="abrirMes(11)">11</button>
+            <button onclick="abrirMes(12)">12</button>
+        </div>
+
+    </header>
+    <main>
+        <div class="pdf-container" id="pdfContainer"></div>
+    </main>
+
+    <script>
+
+        let pdfCounter = 0;
+
+        function gerarPDFs() {
+            const matricula = document.getElementById('matricula').value;
+            const anoInicio = parseInt(document.getElementById('anoInicio').value);
+            const mesInicio = parseInt(document.getElementById('mesInicio').value);
+            const anoFim = parseInt(document.getElementById('anoFim').value);
+            const mesFim = parseInt(document.getElementById('mesFim').value);
+
+            const pdfContainer = document.getElementById('pdfContainer');
+            pdfContainer.innerHTML = '';
+
+            if (!matricula || isNaN(anoInicio) || isNaN(mesInicio) || isNaN(anoFim) || isNaN(mesFim)) {
+                alert("Por favor, preencha todos os campos corretamente.");
+                return;
+            }
+
+            for (let ano = anoInicio; ano <= anoFim; ano++) {
+                const mesInicioCorrigido = ano === anoInicio ? mesInicio : 1;
+                const mesFimCorrigido = ano === anoFim ? mesFim : 12;
+
+                for (let mes = mesInicioCorrigido; mes <= mesFimCorrigido; mes++) {
+                    const link = https://rhbahia.ba.gov.br/auditor/contracheque/file/pdf/${ano}/${mes}/1/${matricula};
+                    criarIframe(link);
+                }
+            }
+        }
+
+        function abrirMes(mes) {
+            const matricula = document.getElementById('matricula').value;
+            const ano = document.getElementById('anoInicio').value;
+
+            if (!matricula || !ano) {
+                alert("Por favor, preencha a matrícula e o ano de início.");
+                return;
+            }
+
+            const link = https://rhbahia.ba.gov.br/auditor/contracheque/file/pdf/${ano}/${mes}/1/${matricula};
+            criarIframe(link);
+        }
+
+        function criarIframe(link) {
+            pdfCounter++;
+            const pdfContainer = document.getElementById('pdfContainer');
+            
+            const pdfItem = document.createElement('div');
+            pdfItem.className = 'pdf-item';
+            
+            const pdfInfo = document.createElement('div');
+            pdfInfo.className = 'pdf-info';
+            pdfInfo.innerText = PDF ${pdfCounter};
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = link;
+            iframe.title = "Visualizador de PDF";
+
+            pdfItem.appendChild(pdfInfo);
+            pdfItem.appendChild(iframe);
+            pdfContainer.appendChild(pdfItem);
+        }
+    </script>
+</body>
+</html>

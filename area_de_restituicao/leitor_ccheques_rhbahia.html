@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta name="google-adsense-account" content="ca-pub-7166056342958503">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro de Rubricas e Isolamento de Valores</title>
+    <link rel="icon" href="../imagens/icon2.png" type="image/png">
+    <script src="../mia.js"></script>
+    <script src="javascript/leitor_ccheques_rhbahia.js" defer></script>
+    <script src="../script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #result {
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        #footer {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .no-copy {
+            user-select: none; /* Impede a seleção do texto */
+            -webkit-user-select: none; /* Compatível com navegadores WebKit (Chrome, Safari) */
+            -moz-user-select: none; /* Compatível com Firefox */
+            -ms-user-select: none; /* Compatível com IE antigo */
+        }
+
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7166056342958503"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1> <img src="../imagens/rh_bahia.png" width="50" height="35"> Filtro de Rubricas e Isolamento de Valores</h1>
+    <textarea id="inputText" placeholder="Insira a lista bruta aqui..."></textarea><br>
+    <button onclick="buscarRubricas()">Buscar</button><br>
+    <button onclick="gerarTabelaProventosPorData()">Gerar Tabela de Proventos por Data</button>
+    <button onclick="gerarTabelaMensalidades7033()">Gerar Tabela TITULAR</button>
+    <button onclick="gerarTabelaMensalidades7035()">Gerar Tabela CÔNJUGE</button>
+    <button onclick="gerarTabelaMensalidades7038()">Gerar Tabela AGREGADO JOVEM</button>
+    <button onclick="gerarTabelaMensalidades7039()">Gerar Tabela AGREGADO MAIOR</button>
+    <button onclick="gerarTabelaMensalidades7034()">Gerar Tabela DEPENDENTE</button>
+    <button onclick="gerarTabelaMensalidades7037()">Gerar Tabela ACOMODAÇÃO</button>
+    <button onclick="gerarTabelaMensalidades7040()">Gerar Tabela CO-PARTICIPÇÃO</button>
+    <button onclick="gerarTabelaMensalidades7088()">Gerar Tabela PARC. RISCO TITULAR</button>
+    <button onclick="gerarTabelaMensalidades7090()">Gerar Tabela PARC. RISCO CÔNJUGE</button>
+    <button onclick="gerarTabelaMensalidades7089()">Gerar Tabela PARC. RISCO DEPENDENTE</button>
+    <button onclick="gerarTabelaMensalidades7091()">Gerar Tabela PARC. RISCO AGREGADO</button><br>
+    <button onclick="gerarTabelaMensalidades7049()" style="color: black; border: 1px solid red;"><strong>Gerar Tabela RETROATIVO</strong></button>
+    <button onclick="gerarTabelaMensalidades7044()" style="color: black; border: 1px solid red;"><strong>Gerar Tabela RESTITUIÇÕES</strong></button>
+    <br>
+    <br>
+    
+    <!-- Incluso um menu minimizavei para indormações e materiais de apoio -->
+    <div class="menu-container">
+        <button class="menu-toggle">☰ Material de Apoio</button>
+            <ul class="menu-list hidden">
+              <li><a href="https://docs.google.com/spreadsheets/d/1f1g1hFI_tSsJfbYtDmC4qBdgnSqBzRe6/edit?gid=960815878#gid=960815878" target="_blank"> <img src="../imagens/planilha_financeira2.png" width="100" height="100"> Modelo de Planilha Financeira - Restituição (faça uma copia). </a></li>
+              <li><a href="https://docs.google.com/spreadsheets/d/1r8sLF3AV3oBv4li8KFUHgbCdpHTzx2GsWtLkXF4yCL4/edit?gid=632666607#gid=632666607" target="_blank"> <img src="../imagens/calculadora.png" width="100" height="100"> Planilha de Cálculo - Restituição (faça uma copia).</a></li>
+              <li><a href="https://docs.google.com/document/d/1mJAWaJzSm85sELak7Q4720VhnOi-7gXf/edit" target="_blank"> <img src="../imagens/despacho.png" width="100" height="100"> Modelo de Despacho Deferimento - Restituição (faça uma copia).</a></li>
+              <li><a href="https://docs.google.com/document/d/1J57DQGl-2y4GrlweRitUjF3dqBS0Vbm9PluCs0p3odE/edit?tab=t.0" target="_blank"> <img src="../imagens/despacho.png" width="100" height="100"> Modelo de Despacho Indeferimento - Restituição (faça uma copia).</a></li>
+            </ul>
+  </div>
+    
+    <!-- INFORMATIVOS -->    
+    <br>
+    <h2>⚠️ ATENÇÃO</h2>
+    <p>Sempre verifique se não há restituições ou retroativos nos contracheques. Basta clicar nos botões "Gerar Tabela RESTITUIÇÕES" e "Gerar Tabela RETROATIVO"</p>
+    <p>Necessario verificar as RUBRICAS que incidem somente apartir de JUNHO 2024 <strong class="destaque_vermelho">para REDAs</strong></p>
+    <div id="topTables"></div> <!-- Adiciona o container onde as tabelas serão exibidas -->
+    <div id="result"></div>
+    <div id="footer">Criado por Marcos Oliveira</div>
+</body>
+</html>
