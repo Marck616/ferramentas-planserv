@@ -152,22 +152,7 @@ h2 {
 
 /* GIF ANIMADO */
 /* styles.css */
-.container {
-    position: relative;
-    z-index: 1; /* Garante que os botões e textos fiquem acima do GIF */
-}
 
-button, p {
-    margin: 20px;
-    z-index: 2; /* Eleva os botões e o texto acima do GIF */
-}
 
-.gif {
-    position: absolute;
-    z-index: 0;
-}
 
-.gif img {
-    width: 100px; /* Ajuste o tamanho do seu GIF */
-    height: auto;
-}
+
