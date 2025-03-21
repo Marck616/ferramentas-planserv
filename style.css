@@ -15,7 +15,6 @@ body {
     background-color: #f4f4f9;
     color: black;
     text-align: center; /*alinhar o texto horizontalmente ao centro do elemento que o contém*/
-    overflow: hidden; /* Impede a barra de rolagem quando o GIF se mover */
     position: relative;
 }
 
