@@ -728,36 +728,23 @@ function gerarTabelaMensalidades7044() {
 //TESTES TABELA GERAL
 
 
-
-
 function gerarTabelaGeral() {
     // Seleciona o container onde a tabela será inserida
     const container = document.getElementById('topTables');
 
-    // Cria um elemento <table> para a tabela de proventos
-    const tabelaProventos = document.createElement('table');
+    // Cria um elemento <table> para a tabela geral
+    const tabelaGeral = document.createElement('table');
 
     // Define o conteúdo HTML da tabela, incluindo o cabeçalho (<thead>) e o corpo (<tbody>)
-    tabelaProventos.innerHTML = `
+    tabelaGeral.innerHTML = `
         <thead>
             <tr>
-                <th>Data</th>
-                <th>Cônjuge</th>
-                <th>Agregado Jovem</th>
-                <th>Agregado Maior</th>
-                <th>Dependente</th>
-                <th>Planserv Especial</th>
-                <th>Co-participação</th>
-                <th>Parc Risco Titular</th>
-                <th>Parc Risco Cônjuge</th>
-                <th>Parc Risco Dependente</th>
-                <th>Parc Risco Agregados</th>
-                <th>Restituição Planserv</th>
-                <th>Retroativo</th>
-                
+                <th>Data</th> <!-- Cabeçalho da coluna "Data" -->
+                <th>Titular</th> <!-- Cabeçalho da coluna "Titular" -->
+                <th>Cônjuge</th> <!-- Cabeçalho da coluna "Cônjuge" -->
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody></tbody> <!-- Corpo da tabela, onde as linhas serão inseridas -->
     `;
 
     // Itera sobre as chaves do objeto `resultadosFiltrados`, que representam os meses/anos
@@ -768,35 +755,44 @@ function gerarTabelaGeral() {
         // Divide os dados em linhas (cada linha representa uma entrada)
         const lines = data.split('\n');
 
-        // Inicializa a variável para armazenar o total de proventos
-        let totalProventos = 0;
+        // Inicializa as variáveis para armazenar os totais de proventos do titular e do cônjuge
+        let totalTitular = 0;
+        let totalConjuge = 0;
 
         // Itera sobre cada linha dos dados
         lines.forEach(line => {
-            // Usa uma expressão regular para encontrar a rubrica "7033" seguida de um valor numérico
-            const match = line.match(/7033.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            // Verifica se a linha contém a rubrica do titular (7033)
+            const matchTitular = line.match(/7033.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchTitular && matchTitular[1]) {
+                // Obtém o valor numérico encontrado para o titular
+                const valueTitular = matchTitular[1];
 
-            // Verifica se a expressão regular encontrou um valor correspondente
-            if (match && match[1]) {
-                // Obtém o valor numérico encontrado
-                const value = match[1];
+                // Converte o valor para um número flutuante e soma ao total do titular
+                totalTitular += parseFloat(valueTitular.replace(/\./g, '').replace(',', '.'));
+            }
 
-                // Converte o valor para um número flutuante:
-                // 1. Remove os pontos de milhar (substitui "." por "")
-                // 2. Substitui a vírgula decimal por um ponto
-                // 3. Converte para float
-                totalProventos += parseFloat(value.replace(/\./g, '').replace(',', '.'));
+            // Verifica se a linha contém a rubrica do cônjuge (7035)
+            const matchConjuge = line.match(/7035.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchConjuge && matchConjuge[1]) {
+                // Obtém o valor numérico encontrado para o cônjuge
+                const valueConjuge = matchConjuge[1];
+
+                // Converte o valor para um número flutuante e soma ao total do cônjuge
+                totalConjuge += parseFloat(valueConjuge.replace(/\./g, '').replace(',', '.'));
             }
         });
 
         // Insere uma nova linha no corpo da tabela (<tbody>)
-        const row = tabelaProventos.querySelector('tbody').insertRow();
+        const row = tabelaGeral.querySelector('tbody').insertRow();
 
         // Insere a célula da data (primeira coluna)
         const dataCell = row.insertCell(0);
 
-        // Insere a célula dos proventos (segunda coluna)
-        const proventosCell = row.insertCell(1);
+        // Insere a célula dos proventos do titular (segunda coluna)
+        const titularCell = row.insertCell(1);
+
+        // Insere a célula dos proventos do cônjuge (terceira coluna)
+        const conjugeCell = row.insertCell(2);
 
         // Adiciona a classe 'no-copy' à célula da data (para fins de estilização ou funcionalidade)
         dataCell.classList.add('no-copy');
@@ -804,8 +800,14 @@ function gerarTabelaGeral() {
         // Define o conteúdo da célula da data, convertendo o formato da data para numérico
         dataCell.textContent = converterDataParaNumerico(mesAno);
 
-        // Define o conteúdo da célula dos proventos, formatando o valor como moeda brasileira
-        proventosCell.textContent = totalProventos.toLocaleString('pt-BR', {
+        // Define o conteúdo da célula dos proventos do titular, formatando o valor como moeda brasileira
+        titularCell.textContent = totalTitular.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, // Garante 2 casas decimais
+            maximumFractionDigits: 2  // Garante 2 casas decimais
+        });
+
+        // Define o conteúdo da célula dos proventos do cônjuge, formatando o valor como moeda brasileira
+        conjugeCell.textContent = totalConjuge.toLocaleString('pt-BR', {
             minimumFractionDigits: 2, // Garante 2 casas decimais
             maximumFractionDigits: 2  // Garante 2 casas decimais
         });
@@ -814,11 +816,8 @@ function gerarTabelaGeral() {
     // Limpa o conteúdo do container antes de adicionar a nova tabela
     container.innerHTML = '';
 
-    // Adiciona a tabela de proventos ao container
-    container.appendChild(tabelaProventos);
+    // Adiciona a tabela geral ao container
+    container.appendChild(tabelaGeral);
 }
-
-
-
 
 
