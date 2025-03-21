@@ -725,3 +725,88 @@ function gerarTabelaMensalidades7044() {
 
 
 
+//TESTES TABELA GERAL
+
+
+
+
+function gerarTabelaGeral() {
+    // Seleciona o container onde a tabela será inserida
+    const container = document.getElementById('topTables');
+
+    // Cria um elemento <table> para a tabela de proventos
+    const tabelaProventos = document.createElement('table');
+
+    // Define o conteúdo HTML da tabela, incluindo o cabeçalho (<thead>) e o corpo (<tbody>)
+    tabelaProventos.innerHTML = `
+        <thead>
+            <tr>
+                <th>Data</th> <!-- Cabeçalho da coluna "Data" -->
+                <th>Titular</th> <!-- Cabeçalho da coluna "Titular" -->
+            </tr>
+        </thead>
+        <tbody></tbody> <!-- Corpo da tabela, onde as linhas serão inseridas -->
+    `;
+
+    // Itera sobre as chaves do objeto `resultadosFiltrados`, que representam os meses/anos
+    Object.keys(resultadosFiltrados).forEach(mesAno => {
+        // Obtém os dados correspondentes ao mês/ano atual
+        const data = resultadosFiltrados[mesAno];
+
+        // Divide os dados em linhas (cada linha representa uma entrada)
+        const lines = data.split('\n');
+
+        // Inicializa a variável para armazenar o total de proventos
+        let totalProventos = 0;
+
+        // Itera sobre cada linha dos dados
+        lines.forEach(line => {
+            // Usa uma expressão regular para encontrar a rubrica "7033" seguida de um valor numérico
+            const match = line.match(/7033.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+
+            // Verifica se a expressão regular encontrou um valor correspondente
+            if (match && match[1]) {
+                // Obtém o valor numérico encontrado
+                const value = match[1];
+
+                // Converte o valor para um número flutuante:
+                // 1. Remove os pontos de milhar (substitui "." por "")
+                // 2. Substitui a vírgula decimal por um ponto
+                // 3. Converte para float
+                totalProventos += parseFloat(value.replace(/\./g, '').replace(',', '.'));
+            }
+        });
+
+        // Insere uma nova linha no corpo da tabela (<tbody>)
+        const row = tabelaProventos.querySelector('tbody').insertRow();
+
+        // Insere a célula da data (primeira coluna)
+        const dataCell = row.insertCell(0);
+
+        // Insere a célula dos proventos (segunda coluna)
+        const proventosCell = row.insertCell(1);
+
+        // Adiciona a classe 'no-copy' à célula da data (para fins de estilização ou funcionalidade)
+        dataCell.classList.add('no-copy');
+
+        // Define o conteúdo da célula da data, convertendo o formato da data para numérico
+        dataCell.textContent = converterDataParaNumerico(mesAno);
+
+        // Define o conteúdo da célula dos proventos, formatando o valor como moeda brasileira
+        proventosCell.textContent = totalProventos.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, // Garante 2 casas decimais
+            maximumFractionDigits: 2  // Garante 2 casas decimais
+        });
+    });
+
+    // Limpa o conteúdo do container antes de adicionar a nova tabela
+    container.innerHTML = '';
+
+    // Adiciona a tabela de proventos ao container
+    container.appendChild(tabelaProventos);
+}
+
+
+
+
+
