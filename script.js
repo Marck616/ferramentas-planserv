@@ -17,20 +17,28 @@ menuToggle.addEventListener('click', () => {
 
 
 //GIF ANIMADO
-// Função para mover o GIF aleatoriamente
-function moveGif() {
-    const gif = document.getElementById('gif');
-    const maxWidth = window.innerWidth - gif.offsetWidth; // Largura máxima para o movimento
-    const maxHeight = window.innerHeight - gif.offsetHeight; // Altura máxima para o movimento
+// Seleciona o elemento do GIF pelo ID
+const gif = document.getElementById('random-gif');
 
-    // Define as posições aleatórias para o GIF
-    const randomX = Math.random() * maxWidth;
-    const randomY = Math.random() * maxHeight;
-
-    // Aplica a posição aleatória ao estilo do GIF
-    gif.style.left = `${randomX}px`;
-    gif.style.top = `${randomY}px`;
+// Função para gerar uma posição aleatória dentro da janela do navegador
+function getRandomPosition() {
+    // Calcula uma posição X aleatória, garantindo que o GIF não saia da tela
+    const x = Math.random() * (window.innerWidth - gif.clientWidth);
+    // Calcula uma posição Y aleatória, garantindo que o GIF não saia da tela
+    const y = Math.random() * (window.innerHeight - gif.clientHeight);
+    // Retorna um objeto com as coordenadas X e Y
+    return { x, y };
 }
 
-// Chama a função a cada 2 segundos para mover o GIF
+// Função para mover o GIF para uma nova posição aleatória
+function moveGif() {
+    // Obtém uma nova posição aleatória
+    const newPosition = getRandomPosition();
+    // Atualiza a posição esquerda (left) do GIF
+    gif.style.left = `${newPosition.x}px`;
+    // Atualiza a posição superior (top) do GIF
+    gif.style.top = `${newPosition.y}px`;
+}
+
+// Define um intervalo para chamar a função moveGif a cada 2 segundos (2000 milissegundos)
 setInterval(moveGif, 2000);
