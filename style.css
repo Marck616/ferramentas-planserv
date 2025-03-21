@@ -15,7 +15,6 @@ body {
     background-color: #f4f4f9;
     color: black;
     text-align: center; /*alinhar o texto horizontalmente ao centro do elemento que o contém*/
-    position: relative;
 }
 
 strong {
