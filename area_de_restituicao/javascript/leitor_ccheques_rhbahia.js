@@ -741,11 +741,23 @@ function gerarTabelaGeral() {
     tabelaProventos.innerHTML = `
         <thead>
             <tr>
-                <th>Data</th> <!-- Cabeçalho da coluna "Data" -->
-                <th>Titular</th> <!-- Cabeçalho da coluna "Titular" -->
+                <th>Data</th>
+                <th>Cônjuge</th>
+                <th>Agregado Jovem</th>
+                <th>Agregado Maior</th>
+                <th>Dependente</th>
+                <th>Planserv Especial</th>
+                <th>Co-participação</th>
+                <th>Parc Risco Titular</th>
+                <th>Parc Risco Cônjuge</th>
+                <th>Parc Risco Dependente</th>
+                <th>Parc Risco Agregados</th>
+                <th>Restituição Planserv</th>
+                <th>Retroativo</th>
+                
             </tr>
         </thead>
-        <tbody></tbody> <!-- Corpo da tabela, onde as linhas serão inseridas -->
+        <tbody></tbody>
     `;
 
     // Itera sobre as chaves do objeto `resultadosFiltrados`, que representam os meses/anos
