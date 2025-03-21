@@ -745,6 +745,9 @@ function gerarTabelaGeral() {
                 <th>Agregado Jovem</th> <!-- Cabeçalho da coluna "Agregado Jovem" -->
                 <th>Agregado Maior</th> <!-- Cabeçalho da coluna "Agregado Maior" -->
                 <th>Dependente</th> <!-- Cabeçalho da coluna "Dependente" -->
+                <th>Planserv Especial</th> <!-- Cabeçalho da coluna "Planserv Especial" -->
+                <th>Co-participação</th> <!-- Cabeçalho da coluna "Co-participação" -->
+                <th>Parc Risco Titular</th> <!-- Cabeçalho da coluna "Parc Risco Titular" -->
             </tr>
         </thead>
         <tbody></tbody> <!-- Corpo da tabela, onde as linhas serão inseridas -->
@@ -764,6 +767,9 @@ function gerarTabelaGeral() {
         let totalAgregadoJovem = 0; // Total do agregado jovem (rubrica 7038)
         let totalAgregadoMaior = 0; // Total do agregado maior (rubrica 7039)
         let totalDependente = 0; // Total do dependente (rubrica 7034)
+        let totalPlanservEspecial = 0; // Total do Planserv Especial (rubrica 7037)
+        let totalCoparticipacao = 0; // Total da Co-participação (rubrica 7040)
+        let totalParcRiscoTitular = 0; // Total da Parc Risco Titular (rubrica 7088)
 
         // Itera sobre cada linha dos dados
         lines.forEach(line => {
@@ -816,6 +822,36 @@ function gerarTabelaGeral() {
                 // Converte o valor para um número flutuante e soma ao total do dependente
                 totalDependente += parseFloat(valueDependente.replace(/\./g, '').replace(',', '.'));
             }
+
+            // Verifica se a linha contém a rubrica do Planserv Especial (7037)
+            const matchPlanservEspecial = line.match(/7037.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchPlanservEspecial && matchPlanservEspecial[1]) {
+                // Obtém o valor numérico encontrado para o Planserv Especial
+                const valuePlanservEspecial = matchPlanservEspecial[1];
+
+                // Converte o valor para um número flutuante e soma ao total do Planserv Especial
+                totalPlanservEspecial += parseFloat(valuePlanservEspecial.replace(/\./g, '').replace(',', '.'));
+            }
+
+            // Verifica se a linha contém a rubrica da Co-participação (7040)
+            const matchCoparticipacao = line.match(/7040.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchCoparticipacao && matchCoparticipacao[1]) {
+                // Obtém o valor numérico encontrado para a Co-participação
+                const valueCoparticipacao = matchCoparticipacao[1];
+
+                // Converte o valor para um número flutuante e soma ao total da Co-participação
+                totalCoparticipacao += parseFloat(valueCoparticipacao.replace(/\./g, '').replace(',', '.'));
+            }
+
+            // Verifica se a linha contém a rubrica da Parc Risco Titular (7088)
+            const matchParcRiscoTitular = line.match(/7088.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchParcRiscoTitular && matchParcRiscoTitular[1]) {
+                // Obtém o valor numérico encontrado para a Parc Risco Titular
+                const valueParcRiscoTitular = matchParcRiscoTitular[1];
+
+                // Converte o valor para um número flutuante e soma ao total da Parc Risco Titular
+                totalParcRiscoTitular += parseFloat(valueParcRiscoTitular.replace(/\./g, '').replace(',', '.'));
+            }
         });
 
         // Insere uma nova linha no corpo da tabela (<tbody>)
@@ -838,6 +874,15 @@ function gerarTabelaGeral() {
 
         // Insere a célula dos proventos do dependente (sexta coluna)
         const dependenteCell = row.insertCell(5);
+
+        // Insere a célula dos proventos do Planserv Especial (sétima coluna)
+        const planservEspecialCell = row.insertCell(6);
+
+        // Insere a célula dos proventos da Co-participação (oitava coluna)
+        const coparticipacaoCell = row.insertCell(7);
+
+        // Insere a célula dos proventos da Parc Risco Titular (nona coluna)
+        const parcRiscoTitularCell = row.insertCell(8);
 
         // Adiciona a classe 'no-copy' à célula da data (para fins de estilização ou funcionalidade)
         dataCell.classList.add('no-copy');
@@ -871,6 +916,24 @@ function gerarTabelaGeral() {
 
         // Define o conteúdo da célula dos proventos do dependente, formatando o valor como moeda brasileira
         dependenteCell.textContent = totalDependente.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, // Garante 2 casas decimais
+            maximumFractionDigits: 2  // Garante 2 casas decimais
+        });
+
+        // Define o conteúdo da célula dos proventos do Planserv Especial, formatando o valor como moeda brasileira
+        planservEspecialCell.textContent = totalPlanservEspecial.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, // Garante 2 casas decimais
+            maximumFractionDigits: 2  // Garante 2 casas decimais
+        });
+
+        // Define o conteúdo da célula dos proventos da Co-participação, formatando o valor como moeda brasileira
+        coparticipacaoCell.textContent = totalCoparticipacao.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, // Garante 2 casas decimais
+            maximumFractionDigits: 2  // Garante 2 casas decimais
+        });
+
+        // Define o conteúdo da célula dos proventos da Parc Risco Titular, formatando o valor como moeda brasileira
+        parcRiscoTitularCell.textContent = totalParcRiscoTitular.toLocaleString('pt-BR', {
             minimumFractionDigits: 2, // Garante 2 casas decimais
             maximumFractionDigits: 2  // Garante 2 casas decimais
         });
