@@ -733,20 +733,20 @@ function gerarTabelaGeral() {
     tabelaGeral.innerHTML = `
         <thead>
             <tr>
-                <th>Data</th>
-                <th>Titular</th>
-                <th>Cônjuge</th>
-                <th>Agregado Jovem</th>
-                <th>Agregado Maior</th>
-                <th>Dependente</th>
-                <th>Planserv Especial</th>
-                <th>Co-participação</th>
-                <th>Parc Risco Titular</th>
-                <th>Parc Risco Cônjuge</th>
-                <th>Parc Risco Agregados</th>
-                <th>Parc Risco Dependente</th>
-                <th>Restituição Planserv</th>
-                <th>Planserv Retroativo</th>
+                <th>MÊS/ANO</th>
+                <th>TITULAR</th>
+                <th>CONJUGE</th>
+                <th>AGREG. JOVEM</th>
+                <th>AGREG. MAIOR</th>
+                <th>DEPENDENTE</th>
+                <th>ESPECIAL</th>
+                <th>COPART.</th>
+                <th>PARC. RISCO TITUL</th>
+                <th>PARC. RISCO CONJUG</th>
+                <th>PARC. RISCO AGREG</th>
+                <th>PARC. RISCO DEPEND</th>
+                <th>RESTITUIÇÃO</th>
+                <th>RETROATIVO</th>
             </tr>
         </thead>
         <tbody></tbody>
