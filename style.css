@@ -148,24 +148,3 @@ h2 {
 
 }
 
-
-
-/* GIF ANIMADO */
-/* styles.css */
-
-
-/* Remove margens padrão do corpo da página e esconde qualquer overflow */
-body {
-    margin: 0;
-    overflow: hidden;
-    height: 100vh; /* Faz o corpo ocupar 100% da altura da viewport */
-    position: relative; /* Permite que elementos filhos sejam posicionados absolutamente dentro do corpo */
-}
-
-/* Estilo para o GIF */
-#random-gif {
-    position: absolute; /* Posiciona o GIF de forma absoluta dentro do corpo */
-    width: 100px; /* Define a largura do GIF */
-    height: auto; /* Mantém a proporção da altura automaticamente */
-}
-
