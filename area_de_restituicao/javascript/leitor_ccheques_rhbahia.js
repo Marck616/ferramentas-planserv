@@ -742,6 +742,9 @@ function gerarTabelaGeral() {
                 <th>Data</th> <!-- Cabeçalho da coluna "Data" -->
                 <th>Titular</th> <!-- Cabeçalho da coluna "Titular" -->
                 <th>Cônjuge</th> <!-- Cabeçalho da coluna "Cônjuge" -->
+                <th>Agregado Jovem</th> <!-- Cabeçalho da coluna "Agregado Jovem" -->
+                <th>Agregado Maior</th> <!-- Cabeçalho da coluna "Agregado Maior" -->
+                <th>Dependente</th> <!-- Cabeçalho da coluna "Dependente" -->
             </tr>
         </thead>
         <tbody></tbody> <!-- Corpo da tabela, onde as linhas serão inseridas -->
@@ -755,9 +758,12 @@ function gerarTabelaGeral() {
         // Divide os dados em linhas (cada linha representa uma entrada)
         const lines = data.split('\n');
 
-        // Inicializa as variáveis para armazenar os totais de proventos do titular e do cônjuge
-        let totalTitular = 0;
-        let totalConjuge = 0;
+        // Inicializa as variáveis para armazenar os totais de proventos
+        let totalTitular = 0; // Total do titular (rubrica 7033)
+        let totalConjuge = 0; // Total do cônjuge (rubrica 7035)
+        let totalAgregadoJovem = 0; // Total do agregado jovem (rubrica 7038)
+        let totalAgregadoMaior = 0; // Total do agregado maior (rubrica 7039)
+        let totalDependente = 0; // Total do dependente (rubrica 7034)
 
         // Itera sobre cada linha dos dados
         lines.forEach(line => {
@@ -780,6 +786,36 @@ function gerarTabelaGeral() {
                 // Converte o valor para um número flutuante e soma ao total do cônjuge
                 totalConjuge += parseFloat(valueConjuge.replace(/\./g, '').replace(',', '.'));
             }
+
+            // Verifica se a linha contém a rubrica do agregado jovem (7038)
+            const matchAgregadoJovem = line.match(/7038.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchAgregadoJovem && matchAgregadoJovem[1]) {
+                // Obtém o valor numérico encontrado para o agregado jovem
+                const valueAgregadoJovem = matchAgregadoJovem[1];
+
+                // Converte o valor para um número flutuante e soma ao total do agregado jovem
+                totalAgregadoJovem += parseFloat(valueAgregadoJovem.replace(/\./g, '').replace(',', '.'));
+            }
+
+            // Verifica se a linha contém a rubrica do agregado maior (7039)
+            const matchAgregadoMaior = line.match(/7039.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchAgregadoMaior && matchAgregadoMaior[1]) {
+                // Obtém o valor numérico encontrado para o agregado maior
+                const valueAgregadoMaior = matchAgregadoMaior[1];
+
+                // Converte o valor para um número flutuante e soma ao total do agregado maior
+                totalAgregadoMaior += parseFloat(valueAgregadoMaior.replace(/\./g, '').replace(',', '.'));
+            }
+
+            // Verifica se a linha contém a rubrica do dependente (7034)
+            const matchDependente = line.match(/7034.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchDependente && matchDependente[1]) {
+                // Obtém o valor numérico encontrado para o dependente
+                const valueDependente = matchDependente[1];
+
+                // Converte o valor para um número flutuante e soma ao total do dependente
+                totalDependente += parseFloat(valueDependente.replace(/\./g, '').replace(',', '.'));
+            }
         });
 
         // Insere uma nova linha no corpo da tabela (<tbody>)
@@ -793,6 +829,15 @@ function gerarTabelaGeral() {
 
         // Insere a célula dos proventos do cônjuge (terceira coluna)
         const conjugeCell = row.insertCell(2);
+
+        // Insere a célula dos proventos do agregado jovem (quarta coluna)
+        const agregadoJovemCell = row.insertCell(3);
+
+        // Insere a célula dos proventos do agregado maior (quinta coluna)
+        const agregadoMaiorCell = row.insertCell(4);
+
+        // Insere a célula dos proventos do dependente (sexta coluna)
+        const dependenteCell = row.insertCell(5);
 
         // Adiciona a classe 'no-copy' à célula da data (para fins de estilização ou funcionalidade)
         dataCell.classList.add('no-copy');
@@ -811,6 +856,24 @@ function gerarTabelaGeral() {
             minimumFractionDigits: 2, // Garante 2 casas decimais
             maximumFractionDigits: 2  // Garante 2 casas decimais
         });
+
+        // Define o conteúdo da célula dos proventos do agregado jovem, formatando o valor como moeda brasileira
+        agregadoJovemCell.textContent = totalAgregadoJovem.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, // Garante 2 casas decimais
+            maximumFractionDigits: 2  // Garante 2 casas decimais
+        });
+
+        // Define o conteúdo da célula dos proventos do agregado maior, formatando o valor como moeda brasileira
+        agregadoMaiorCell.textContent = totalAgregadoMaior.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, // Garante 2 casas decimais
+            maximumFractionDigits: 2  // Garante 2 casas decimais
+        });
+
+        // Define o conteúdo da célula dos proventos do dependente, formatando o valor como moeda brasileira
+        dependenteCell.textContent = totalDependente.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, // Garante 2 casas decimais
+            maximumFractionDigits: 2  // Garante 2 casas decimais
+        });
     });
 
     // Limpa o conteúdo do container antes de adicionar a nova tabela
@@ -819,5 +882,3 @@ function gerarTabelaGeral() {
     // Adiciona a tabela geral ao container
     container.appendChild(tabelaGeral);
 }
-
-
