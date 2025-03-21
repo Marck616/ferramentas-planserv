@@ -15,6 +15,8 @@ body {
     background-color: #f4f4f9;
     color: black;
     text-align: center; /*alinhar o texto horizontalmente ao centro do elemento que o contém*/
+    overflow: hidden; /* Impede a barra de rolagem quando o GIF se mover */
+    position: relative;
 }
 
 strong {
@@ -152,26 +154,22 @@ h2 {
 
 /* GIF ANIMADO */
 /* styles.css */
-body {
-    margin: 0;
-    overflow: hidden;
+.container {
     position: relative;
+    z-index: 1; /* Garante que os botões e textos fiquem acima do GIF */
 }
 
-.content {
-    position: relative;
-    z-index: 1;
-    padding: 20px;
+button, p {
+    margin: 20px;
+    z-index: 2; /* Eleva os botões e o texto acima do GIF */
 }
 
-#animated-gif {
+.gif {
     position: absolute;
-    z-index: 0; /* Coloca o GIF por baixo dos outros elementos */
-    width: 100px; /* Tamanho do GIF */
-    height: 200px;
-    background-image: url('imagens/banana_cat.gif'); /* Substitua pelo caminho do seu GIF */
-    background-size: cover;
+    z-index: 0;
 }
 
-
-    
+.gif img {
+    width: 100px; /* Ajuste o tamanho do seu GIF */
+    height: auto;
+}
