@@ -11,6 +11,26 @@
     <script src="mia.js"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7166056342958503"
      crossorigin="anonymous"></script>
+    <style>
+            /* Define o container do GIF */
+    .gif-container {
+      width: 300px; /* Largura do container (ajuste conforme o tamanho do GIF) */
+      height: 300px; /* Altura do container (ajuste conforme o tamanho do GIF) */
+      background-image: url('imagens/gato_pulando.gif'); /* Caminho para o GIF */
+      background-size: cover; /* Faz o GIF cobrir todo o container */
+      animation: reverseGif 5s linear infinite; /* Aplica a animação */
+    }
+
+    /* Define a animação */
+    @keyframes reverseGif {
+      0% {
+        background-position: 100% 0; /* Começa do final do GIF */
+      }
+      100% {
+        background-position: 0 0; /* Termina no início do GIF */
+      }
+    }
+    </style>
 </head>
 <body>
     <h1>Materiais do Cadastro</h1>
@@ -21,7 +41,8 @@
         <button style="width: 400px;" onclick="window.open('https://drive.google.com/drive/folders/1GWJT0Qkj8SR-seZLsLpx4AC09_9d_O8f?usp=drive_link', '_blank')">Pasta de Apoio ❒</button><br>
         <button style="width: 400px;" onclick="window.open('https://landbot.online/v3/H-2750270-U38JTZ3M8D1HUSTF/index.html', '_blank')">ChatBot (Baseado no Manual de Atendimento)</button><br>
     <p></p>
-    
+
+    <div class="gif-container"></div>
     <!-- <img src="imagens/cat2025.gif"
         width="400" height="450"> 
     <br>
@@ -30,13 +51,7 @@
         <img src="imagens/tjba.png"
         width="1400" height="1000"> -->
     
-<img src="imagens/gato_pulando.gif"
-        width="400" height="450"> 
-    <br>
-      <!--  <h2>Informações</h2>
-        <p>O LEITOR DE CONTRACHEQUES DO TJBA esta funcionado. <strong>Favor informar erros e Rubricas Faltantes</strong></p>
-        <img src="imagens/tjba.png"
-        width="1400" height="1000"> -->
+
     
 </body>
 </html>
