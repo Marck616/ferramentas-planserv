@@ -736,17 +736,17 @@ function gerarTabelaGeral() {
                 <th>Data</th>
                 <th>Titular</th>
                 <th>Cônjuge</th>
-                <th>Agregado <br> Jovem</th>
-                <th>Agregado <br> Maior</th>
+                <th>Agregado Jovem</th>
+                <th>Agregado Maior</th>
                 <th>Dependente</th>
-                <th>Planserv <br> Especial</th>
+                <th>Planserv Especial</th>
                 <th>Co-participação</th>
-                <th>Parc Risco <br> Titular</th>
-                <th>Parc Risco <br> Cônjuge</th>
-                <th>Parc Risco <br> Agregados</th>
-                <th>Parc Risco <br> Dependente</th>
-                <th>Restituição <br> Planserv</th>
-                <th>Planserv <br> Retroativo</th>
+                <th>Parc Risco Titular</th>
+                <th>Parc Risco Cônjuge</th>
+                <th>Parc Risco Agregados</th>
+                <th>Parc Risco Dependente</th>
+                <th>Restituição Planserv</th>
+                <th>Planserv Retroativo</th>
             </tr>
         </thead>
         <tbody></tbody>
