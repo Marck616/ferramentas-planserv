@@ -738,7 +738,7 @@ function gerarTabelaGeral() {
                 <th>CONJUGE</th>
                 <th>AGREG. JOVEM</th>
                 <th>AGREG. MAIOR</th>
-                <th>DEPENDENTE</th>
+                <th>DEPEND.</th>
                 <th>ESPECIAL</th>
                 <th>COPART.</th>
                 <th>PARC. RISCO TITUL</th>
