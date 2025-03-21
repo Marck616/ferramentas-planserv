@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Street View para VR</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black; /* Fundo preto */
+            overflow: hidden;
+        }
+        .container {
+            display: flex;
+            gap: 40px; /* Espaço duplicado entre os contêineres */
+        }
+        .street-view-container {
+            width: 400px; /* Largura fixa para formato quadrado */
+            height: 400px; /* Altura fixa para formato quadrado */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Sombra sutil */
+        }
+        #street-view-1, #street-view-2 {
+            width: 100%;
+            height: 100%;
+        }
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .controls button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="street-view-container">
+            <div id="street-view-1"></div>
+        </div>
+        <div class="street-view-container">
+            <div id="street-view-2"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="sync-button" onclick="toggleSync()">Ativar Sincronização</button>
+        <button onclick="resetViews()">Resetar Visualizações</button>
+    </div>
+
+    <!-- Carrega a API do Google Maps JavaScript com sua chave -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkY6n5G0Tuf7Y1uOH4fN_KUgngc2-q8hc&callback=initStreetView" async defer></script>
+
+    <script>
+        let panorama1, panorama2;
+        let isSyncing = false;
+        let syncInterval;
+
+        function initStreetView() {
+            // Coordenadas do local (latitude e longitude)
+            const location = { lat: -5.0668158, lng: -42.8132403 };
+
+            // Configurações do Street View
+            const streetViewOptions = {
+                position: location, // Define a posição inicial
+                pov: { heading: 165, pitch: 0 }, // Define a direção e inclinação da câmera
+                zoom: 1, // Nível de zoom
+            };
+
+            // Cria o primeiro Street View
+            panorama1 = new google.maps.StreetViewPanorama(
+                document.getElementById("street-view-1"), // Elemento HTML onde o Street View será exibido
+                streetViewOptions
+            );
+
+            // Cria o segundo Street View
+            panorama2 = new google.maps.StreetViewPanorama(
+                document.getElementById("street-view-2"), // Elemento HTML onde o Street View será exibido
+                streetViewOptions
+            );
+        }
+
+        // Função para sincronizar as visualizações
+        function syncViews() {
+            const pov = panorama1.getPov();
+            const position = panorama1.getPosition();
+            const zoom = panorama1.getZoom();
+
+            // Sincroniza a direção e o zoom
+            panorama2.setPov(pov);
+            panorama2.setZoom(zoom);
+
+            // Sincroniza a posição (movimentação)
+            if (!panorama2.getPosition().equals(position)) {
+                panorama2.setPosition(position);
+            }
+        }
+
+        // Função para ativar/desativar a sincronização automática
+        function toggleSync() {
+            const syncButton = document.getElementById("sync-button");
+
+            if (isSyncing) {
+                // Desativa a sincronização
+                clearInterval(syncInterval);
+                syncButton.textContent = "Ativar Sincronização";
+                syncButton.style.backgroundColor = "#007bff";
+            } else {
+                // Ativa a sincronização
+                syncInterval = setInterval(syncViews, 50); // Sincroniza a cada 50ms
+                syncButton.textContent = "Desativar Sincronização";
+                syncButton.style.backgroundColor = "#dc3545";
+            }
+
+            isSyncing = !isSyncing;
+        }
+
+        // Função para resetar as visualizações
+        function resetViews() {
+            const location = { lat: -5.0668158, lng: -42.8132403 };
+            const streetViewOptions = {
+                position: location,
+                pov: { heading: 165, pitch: 0 },
+                zoom: 1,
+            };
+
+            panorama1.setPosition(location);
+            panorama1.setPov(streetViewOptions.pov);
+            panorama1.setZoom(streetViewOptions.zoom);
+
+            panorama2.setPosition(location);
+            panorama2.setPov(streetViewOptions.pov);
+            panorama2.setZoom(streetViewOptions.zoom);
+        }
+    </script>
+
+</body>
+</html>
