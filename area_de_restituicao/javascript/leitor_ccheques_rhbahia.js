@@ -727,7 +727,6 @@ function gerarTabelaMensalidades7044() {
 
 //TESTES TABELA GERAL
 
-
 function gerarTabelaGeral() {
     // Seleciona o container onde a tabela será inserida
     const container = document.getElementById('topTables');
@@ -748,6 +747,9 @@ function gerarTabelaGeral() {
                 <th>Planserv Especial</th> <!-- Cabeçalho da coluna "Planserv Especial" -->
                 <th>Co-participação</th> <!-- Cabeçalho da coluna "Co-participação" -->
                 <th>Parc Risco Titular</th> <!-- Cabeçalho da coluna "Parc Risco Titular" -->
+                <th>Parc Risco Cônjuge</th> <!-- Cabeçalho da coluna "Parc Risco Cônjuge" -->
+                <th>Parc Risco Agregados</th> <!-- Cabeçalho da coluna "Parc Risco Agregados" -->
+                <th>Parc Risco Dependente</th> <!-- Cabeçalho da coluna "Parc Risco Dependente" -->
             </tr>
         </thead>
         <tbody></tbody> <!-- Corpo da tabela, onde as linhas serão inseridas -->
@@ -770,6 +772,9 @@ function gerarTabelaGeral() {
         let totalPlanservEspecial = 0; // Total do Planserv Especial (rubrica 7037)
         let totalCoparticipacao = 0; // Total da Co-participação (rubrica 7040)
         let totalParcRiscoTitular = 0; // Total da Parc Risco Titular (rubrica 7088)
+        let totalParcRiscoConjuge = 0; // Total da Parc Risco Cônjuge (rubrica 7090)
+        let totalParcRiscoAgregados = 0; // Total da Parc Risco Agregados (rubrica 7091)
+        let totalParcRiscoDependente = 0; // Total da Parc Risco Dependente (rubrica 7089)
 
         // Itera sobre cada linha dos dados
         lines.forEach(line => {
@@ -852,6 +857,36 @@ function gerarTabelaGeral() {
                 // Converte o valor para um número flutuante e soma ao total da Parc Risco Titular
                 totalParcRiscoTitular += parseFloat(valueParcRiscoTitular.replace(/\./g, '').replace(',', '.'));
             }
+
+            // Verifica se a linha contém a rubrica da Parc Risco Cônjuge (7090)
+            const matchParcRiscoConjuge = line.match(/7090.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchParcRiscoConjuge && matchParcRiscoConjuge[1]) {
+                // Obtém o valor numérico encontrado para a Parc Risco Cônjuge
+                const valueParcRiscoConjuge = matchParcRiscoConjuge[1];
+
+                // Converte o valor para um número flutuante e soma ao total da Parc Risco Cônjuge
+                totalParcRiscoConjuge += parseFloat(valueParcRiscoConjuge.replace(/\./g, '').replace(',', '.'));
+            }
+
+            // Verifica se a linha contém a rubrica da Parc Risco Agregados (7091)
+            const matchParcRiscoAgregados = line.match(/7091.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchParcRiscoAgregados && matchParcRiscoAgregados[1]) {
+                // Obtém o valor numérico encontrado para a Parc Risco Agregados
+                const valueParcRiscoAgregados = matchParcRiscoAgregados[1];
+
+                // Converte o valor para um número flutuante e soma ao total da Parc Risco Agregados
+                totalParcRiscoAgregados += parseFloat(valueParcRiscoAgregados.replace(/\./g, '').replace(',', '.'));
+            }
+
+            // Verifica se a linha contém a rubrica da Parc Risco Dependente (7089)
+            const matchParcRiscoDependente = line.match(/7089.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchParcRiscoDependente && matchParcRiscoDependente[1]) {
+                // Obtém o valor numérico encontrado para a Parc Risco Dependente
+                const valueParcRiscoDependente = matchParcRiscoDependente[1];
+
+                // Converte o valor para um número flutuante e soma ao total da Parc Risco Dependente
+                totalParcRiscoDependente += parseFloat(valueParcRiscoDependente.replace(/\./g, '').replace(',', '.'));
+            }
         });
 
         // Insere uma nova linha no corpo da tabela (<tbody>)
@@ -883,6 +918,15 @@ function gerarTabelaGeral() {
 
         // Insere a célula dos proventos da Parc Risco Titular (nona coluna)
         const parcRiscoTitularCell = row.insertCell(8);
+
+        // Insere a célula dos proventos da Parc Risco Cônjuge (décima coluna)
+        const parcRiscoConjugeCell = row.insertCell(9);
+
+        // Insere a célula dos proventos da Parc Risco Agregados (décima primeira coluna)
+        const parcRiscoAgregadosCell = row.insertCell(10);
+
+        // Insere a célula dos proventos da Parc Risco Dependente (décima segunda coluna)
+        const parcRiscoDependenteCell = row.insertCell(11);
 
         // Adiciona a classe 'no-copy' à célula da data (para fins de estilização ou funcionalidade)
         dataCell.classList.add('no-copy');
@@ -934,6 +978,24 @@ function gerarTabelaGeral() {
 
         // Define o conteúdo da célula dos proventos da Parc Risco Titular, formatando o valor como moeda brasileira
         parcRiscoTitularCell.textContent = totalParcRiscoTitular.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, // Garante 2 casas decimais
+            maximumFractionDigits: 2  // Garante 2 casas decimais
+        });
+
+        // Define o conteúdo da célula dos proventos da Parc Risco Cônjuge, formatando o valor como moeda brasileira
+        parcRiscoConjugeCell.textContent = totalParcRiscoConjuge.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, // Garante 2 casas decimais
+            maximumFractionDigits: 2  // Garante 2 casas decimais
+        });
+
+        // Define o conteúdo da célula dos proventos da Parc Risco Agregados, formatando o valor como moeda brasileira
+        parcRiscoAgregadosCell.textContent = totalParcRiscoAgregados.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, // Garante 2 casas decimais
+            maximumFractionDigits: 2  // Garante 2 casas decimais
+        });
+
+        // Define o conteúdo da célula dos proventos da Parc Risco Dependente, formatando o valor como moeda brasileira
+        parcRiscoDependenteCell.textContent = totalParcRiscoDependente.toLocaleString('pt-BR', {
             minimumFractionDigits: 2, // Garante 2 casas decimais
             maximumFractionDigits: 2  // Garante 2 casas decimais
         });
