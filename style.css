@@ -168,7 +168,7 @@ body {
     position: absolute;
     z-index: 0; /* Coloca o GIF por baixo dos outros elementos */
     width: 100px; /* Tamanho do GIF */
-    height: 100px;
+    height: 200px;
     background-image: url('imagens/banana_cat.gif'); /* Substitua pelo caminho do seu GIF */
     background-size: cover;
 }
