@@ -728,282 +728,147 @@ function gerarTabelaMensalidades7044() {
 //TESTES TABELA GERAL
 
 function gerarTabelaGeral() {
-    // Seleciona o container onde a tabela será inserida
     const container = document.getElementById('topTables');
-
-    // Cria um elemento <table> para a tabela geral
     const tabelaGeral = document.createElement('table');
-
-    // Define o conteúdo HTML da tabela, incluindo o cabeçalho (<thead>) e o corpo (<tbody>)
     tabelaGeral.innerHTML = `
         <thead>
             <tr>
-                <th>Data</th> <!-- Cabeçalho da coluna "Data" -->
-                <th>Titular</th> <!-- Cabeçalho da coluna "Titular" -->
-                <th>Cônjuge</th> <!-- Cabeçalho da coluna "Cônjuge" -->
-                <th>Agregado Jovem</th> <!-- Cabeçalho da coluna "Agregado Jovem" -->
-                <th>Agregado Maior</th> <!-- Cabeçalho da coluna "Agregado Maior" -->
-                <th>Dependente</th> <!-- Cabeçalho da coluna "Dependente" -->
-                <th>Planserv Especial</th> <!-- Cabeçalho da coluna "Planserv Especial" -->
-                <th>Co-participação</th> <!-- Cabeçalho da coluna "Co-participação" -->
-                <th>Parc Risco Titular</th> <!-- Cabeçalho da coluna "Parc Risco Titular" -->
-                <th>Parc Risco Cônjuge</th> <!-- Cabeçalho da coluna "Parc Risco Cônjuge" -->
-                <th>Parc Risco Agregados</th> <!-- Cabeçalho da coluna "Parc Risco Agregados" -->
-                <th>Parc Risco Dependente</th> <!-- Cabeçalho da coluna "Parc Risco Dependente" -->
+                <th>Data</th>
+                <th>Titular</th>
+                <th>Cônjuge</th>
+                <th>Agregado Jovem</th>
+                <th>Agregado Maior</th>
+                <th>Dependente</th>
+                <th>Planserv Especial</th>
+                <th>Co-participação</th>
+                <th>Parc Risco Titular</th>
+                <th>Parc Risco Cônjuge</th>
+                <th>Parc Risco Agregados</th>
+                <th>Parc Risco Dependente</th>
+                <th>Restituição Planserv</th>
+                <th>Planserv Retroativo</th>
             </tr>
         </thead>
-        <tbody></tbody> <!-- Corpo da tabela, onde as linhas serão inseridas -->
+        <tbody></tbody>
     `;
 
-    // Itera sobre as chaves do objeto `resultadosFiltrados`, que representam os meses/anos
     Object.keys(resultadosFiltrados).forEach(mesAno => {
-        // Obtém os dados correspondentes ao mês/ano atual
         const data = resultadosFiltrados[mesAno];
-
-        // Divide os dados em linhas (cada linha representa uma entrada)
         const lines = data.split('\n');
+        let totalTitular = 0;
+        let totalConjuge = 0;
+        let totalAgregadoJovem = 0;
+        let totalAgregadoMaior = 0;
+        let totalDependente = 0;
+        let totalPlanservEspecial = 0;
+        let totalCoparticipacao = 0;
+        let totalParcRiscoTitular = 0;
+        let totalParcRiscoConjuge = 0;
+        let totalParcRiscoAgregados = 0;
+        let totalParcRiscoDependente = 0;
+        let totalRestituicaoPlanserv = 0;
+        let totalPlanservRetroativo = 0;
 
-        // Inicializa as variáveis para armazenar os totais de proventos
-        let totalTitular = 0; // Total do titular (rubrica 7033)
-        let totalConjuge = 0; // Total do cônjuge (rubrica 7035)
-        let totalAgregadoJovem = 0; // Total do agregado jovem (rubrica 7038)
-        let totalAgregadoMaior = 0; // Total do agregado maior (rubrica 7039)
-        let totalDependente = 0; // Total do dependente (rubrica 7034)
-        let totalPlanservEspecial = 0; // Total do Planserv Especial (rubrica 7037)
-        let totalCoparticipacao = 0; // Total da Co-participação (rubrica 7040)
-        let totalParcRiscoTitular = 0; // Total da Parc Risco Titular (rubrica 7088)
-        let totalParcRiscoConjuge = 0; // Total da Parc Risco Cônjuge (rubrica 7090)
-        let totalParcRiscoAgregados = 0; // Total da Parc Risco Agregados (rubrica 7091)
-        let totalParcRiscoDependente = 0; // Total da Parc Risco Dependente (rubrica 7089)
-
-        // Itera sobre cada linha dos dados
         lines.forEach(line => {
-            // Verifica se a linha contém a rubrica do titular (7033)
             const matchTitular = line.match(/7033.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
             if (matchTitular && matchTitular[1]) {
-                // Obtém o valor numérico encontrado para o titular
-                const valueTitular = matchTitular[1];
-
-                // Converte o valor para um número flutuante e soma ao total do titular
-                totalTitular += parseFloat(valueTitular.replace(/\./g, '').replace(',', '.'));
+                totalTitular += parseFloat(matchTitular[1].replace(/\./g, '').replace(',', '.'));
             }
 
-            // Verifica se a linha contém a rubrica do cônjuge (7035)
             const matchConjuge = line.match(/7035.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
             if (matchConjuge && matchConjuge[1]) {
-                // Obtém o valor numérico encontrado para o cônjuge
-                const valueConjuge = matchConjuge[1];
-
-                // Converte o valor para um número flutuante e soma ao total do cônjuge
-                totalConjuge += parseFloat(valueConjuge.replace(/\./g, '').replace(',', '.'));
+                totalConjuge += parseFloat(matchConjuge[1].replace(/\./g, '').replace(',', '.'));
             }
 
-            // Verifica se a linha contém a rubrica do agregado jovem (7038)
             const matchAgregadoJovem = line.match(/7038.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
             if (matchAgregadoJovem && matchAgregadoJovem[1]) {
-                // Obtém o valor numérico encontrado para o agregado jovem
-                const valueAgregadoJovem = matchAgregadoJovem[1];
-
-                // Converte o valor para um número flutuante e soma ao total do agregado jovem
-                totalAgregadoJovem += parseFloat(valueAgregadoJovem.replace(/\./g, '').replace(',', '.'));
+                totalAgregadoJovem += parseFloat(matchAgregadoJovem[1].replace(/\./g, '').replace(',', '.'));
             }
 
-            // Verifica se a linha contém a rubrica do agregado maior (7039)
             const matchAgregadoMaior = line.match(/7039.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
             if (matchAgregadoMaior && matchAgregadoMaior[1]) {
-                // Obtém o valor numérico encontrado para o agregado maior
-                const valueAgregadoMaior = matchAgregadoMaior[1];
-
-                // Converte o valor para um número flutuante e soma ao total do agregado maior
-                totalAgregadoMaior += parseFloat(valueAgregadoMaior.replace(/\./g, '').replace(',', '.'));
+                totalAgregadoMaior += parseFloat(matchAgregadoMaior[1].replace(/\./g, '').replace(',', '.'));
             }
 
-            // Verifica se a linha contém a rubrica do dependente (7034)
             const matchDependente = line.match(/7034.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
             if (matchDependente && matchDependente[1]) {
-                // Obtém o valor numérico encontrado para o dependente
-                const valueDependente = matchDependente[1];
-
-                // Converte o valor para um número flutuante e soma ao total do dependente
-                totalDependente += parseFloat(valueDependente.replace(/\./g, '').replace(',', '.'));
+                totalDependente += parseFloat(matchDependente[1].replace(/\./g, '').replace(',', '.'));
             }
 
-            // Verifica se a linha contém a rubrica do Planserv Especial (7037)
             const matchPlanservEspecial = line.match(/7037.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
             if (matchPlanservEspecial && matchPlanservEspecial[1]) {
-                // Obtém o valor numérico encontrado para o Planserv Especial
-                const valuePlanservEspecial = matchPlanservEspecial[1];
-
-                // Converte o valor para um número flutuante e soma ao total do Planserv Especial
-                totalPlanservEspecial += parseFloat(valuePlanservEspecial.replace(/\./g, '').replace(',', '.'));
+                totalPlanservEspecial += parseFloat(matchPlanservEspecial[1].replace(/\./g, '').replace(',', '.'));
             }
 
-            // Verifica se a linha contém a rubrica da Co-participação (7040)
             const matchCoparticipacao = line.match(/7040.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
             if (matchCoparticipacao && matchCoparticipacao[1]) {
-                // Obtém o valor numérico encontrado para a Co-participação
-                const valueCoparticipacao = matchCoparticipacao[1];
-
-                // Converte o valor para um número flutuante e soma ao total da Co-participação
-                totalCoparticipacao += parseFloat(valueCoparticipacao.replace(/\./g, '').replace(',', '.'));
+                totalCoparticipacao += parseFloat(matchCoparticipacao[1].replace(/\./g, '').replace(',', '.'));
             }
 
-            // Verifica se a linha contém a rubrica da Parc Risco Titular (7088)
             const matchParcRiscoTitular = line.match(/7088.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
             if (matchParcRiscoTitular && matchParcRiscoTitular[1]) {
-                // Obtém o valor numérico encontrado para a Parc Risco Titular
-                const valueParcRiscoTitular = matchParcRiscoTitular[1];
-
-                // Converte o valor para um número flutuante e soma ao total da Parc Risco Titular
-                totalParcRiscoTitular += parseFloat(valueParcRiscoTitular.replace(/\./g, '').replace(',', '.'));
+                totalParcRiscoTitular += parseFloat(matchParcRiscoTitular[1].replace(/\./g, '').replace(',', '.'));
             }
 
-            // Verifica se a linha contém a rubrica da Parc Risco Cônjuge (7090)
             const matchParcRiscoConjuge = line.match(/7090.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
             if (matchParcRiscoConjuge && matchParcRiscoConjuge[1]) {
-                // Obtém o valor numérico encontrado para a Parc Risco Cônjuge
-                const valueParcRiscoConjuge = matchParcRiscoConjuge[1];
-
-                // Converte o valor para um número flutuante e soma ao total da Parc Risco Cônjuge
-                totalParcRiscoConjuge += parseFloat(valueParcRiscoConjuge.replace(/\./g, '').replace(',', '.'));
+                totalParcRiscoConjuge += parseFloat(matchParcRiscoConjuge[1].replace(/\./g, '').replace(',', '.'));
             }
 
-            // Verifica se a linha contém a rubrica da Parc Risco Agregados (7091)
             const matchParcRiscoAgregados = line.match(/7091.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
             if (matchParcRiscoAgregados && matchParcRiscoAgregados[1]) {
-                // Obtém o valor numérico encontrado para a Parc Risco Agregados
-                const valueParcRiscoAgregados = matchParcRiscoAgregados[1];
-
-                // Converte o valor para um número flutuante e soma ao total da Parc Risco Agregados
-                totalParcRiscoAgregados += parseFloat(valueParcRiscoAgregados.replace(/\./g, '').replace(',', '.'));
+                totalParcRiscoAgregados += parseFloat(matchParcRiscoAgregados[1].replace(/\./g, '').replace(',', '.'));
             }
 
-            // Verifica se a linha contém a rubrica da Parc Risco Dependente (7089)
             const matchParcRiscoDependente = line.match(/7089.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
             if (matchParcRiscoDependente && matchParcRiscoDependente[1]) {
-                // Obtém o valor numérico encontrado para a Parc Risco Dependente
-                const valueParcRiscoDependente = matchParcRiscoDependente[1];
+                totalParcRiscoDependente += parseFloat(matchParcRiscoDependente[1].replace(/\./g, '').replace(',', '.'));
+            }
 
-                // Converte o valor para um número flutuante e soma ao total da Parc Risco Dependente
-                totalParcRiscoDependente += parseFloat(valueParcRiscoDependente.replace(/\./g, '').replace(',', '.'));
+            const matchRestituicaoPlanserv = line.match(/7044.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchRestituicaoPlanserv && matchRestituicaoPlanserv[1]) {
+                totalRestituicaoPlanserv += parseFloat(matchRestituicaoPlanserv[1].replace(/\./g, '').replace(',', '.'));
+            }
+
+            const matchPlanservRetroativo = line.match(/7049.*?(\d{1,3}(?:\.\d{3})*,\d{2})/);
+            if (matchPlanservRetroativo && matchPlanservRetroativo[1]) {
+                totalPlanservRetroativo += parseFloat(matchPlanservRetroativo[1].replace(/\./g, '').replace(',', '.'));
             }
         });
 
-        // Insere uma nova linha no corpo da tabela (<tbody>)
         const row = tabelaGeral.querySelector('tbody').insertRow();
-
-        // Insere a célula da data (primeira coluna)
         const dataCell = row.insertCell(0);
-
-        // Insere a célula dos proventos do titular (segunda coluna)
         const titularCell = row.insertCell(1);
-
-        // Insere a célula dos proventos do cônjuge (terceira coluna)
         const conjugeCell = row.insertCell(2);
-
-        // Insere a célula dos proventos do agregado jovem (quarta coluna)
         const agregadoJovemCell = row.insertCell(3);
-
-        // Insere a célula dos proventos do agregado maior (quinta coluna)
         const agregadoMaiorCell = row.insertCell(4);
-
-        // Insere a célula dos proventos do dependente (sexta coluna)
         const dependenteCell = row.insertCell(5);
-
-        // Insere a célula dos proventos do Planserv Especial (sétima coluna)
         const planservEspecialCell = row.insertCell(6);
-
-        // Insere a célula dos proventos da Co-participação (oitava coluna)
         const coparticipacaoCell = row.insertCell(7);
-
-        // Insere a célula dos proventos da Parc Risco Titular (nona coluna)
         const parcRiscoTitularCell = row.insertCell(8);
-
-        // Insere a célula dos proventos da Parc Risco Cônjuge (décima coluna)
         const parcRiscoConjugeCell = row.insertCell(9);
-
-        // Insere a célula dos proventos da Parc Risco Agregados (décima primeira coluna)
         const parcRiscoAgregadosCell = row.insertCell(10);
-
-        // Insere a célula dos proventos da Parc Risco Dependente (décima segunda coluna)
         const parcRiscoDependenteCell = row.insertCell(11);
+        const restituicaoPlanservCell = row.insertCell(12);
+        const planservRetroativoCell = row.insertCell(13);
 
-        // Adiciona a classe 'no-copy' à célula da data (para fins de estilização ou funcionalidade)
         dataCell.classList.add('no-copy');
-
-        // Define o conteúdo da célula da data, convertendo o formato da data para numérico
         dataCell.textContent = converterDataParaNumerico(mesAno);
-
-        // Define o conteúdo da célula dos proventos do titular, formatando o valor como moeda brasileira
-        titularCell.textContent = totalTitular.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2, // Garante 2 casas decimais
-            maximumFractionDigits: 2  // Garante 2 casas decimais
-        });
-
-        // Define o conteúdo da célula dos proventos do cônjuge, formatando o valor como moeda brasileira
-        conjugeCell.textContent = totalConjuge.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2, // Garante 2 casas decimais
-            maximumFractionDigits: 2  // Garante 2 casas decimais
-        });
-
-        // Define o conteúdo da célula dos proventos do agregado jovem, formatando o valor como moeda brasileira
-        agregadoJovemCell.textContent = totalAgregadoJovem.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2, // Garante 2 casas decimais
-            maximumFractionDigits: 2  // Garante 2 casas decimais
-        });
-
-        // Define o conteúdo da célula dos proventos do agregado maior, formatando o valor como moeda brasileira
-        agregadoMaiorCell.textContent = totalAgregadoMaior.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2, // Garante 2 casas decimais
-            maximumFractionDigits: 2  // Garante 2 casas decimais
-        });
-
-        // Define o conteúdo da célula dos proventos do dependente, formatando o valor como moeda brasileira
-        dependenteCell.textContent = totalDependente.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2, // Garante 2 casas decimais
-            maximumFractionDigits: 2  // Garante 2 casas decimais
-        });
-
-        // Define o conteúdo da célula dos proventos do Planserv Especial, formatando o valor como moeda brasileira
-        planservEspecialCell.textContent = totalPlanservEspecial.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2, // Garante 2 casas decimais
-            maximumFractionDigits: 2  // Garante 2 casas decimais
-        });
-
-        // Define o conteúdo da célula dos proventos da Co-participação, formatando o valor como moeda brasileira
-        coparticipacaoCell.textContent = totalCoparticipacao.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2, // Garante 2 casas decimais
-            maximumFractionDigits: 2  // Garante 2 casas decimais
-        });
-
-        // Define o conteúdo da célula dos proventos da Parc Risco Titular, formatando o valor como moeda brasileira
-        parcRiscoTitularCell.textContent = totalParcRiscoTitular.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2, // Garante 2 casas decimais
-            maximumFractionDigits: 2  // Garante 2 casas decimais
-        });
-
-        // Define o conteúdo da célula dos proventos da Parc Risco Cônjuge, formatando o valor como moeda brasileira
-        parcRiscoConjugeCell.textContent = totalParcRiscoConjuge.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2, // Garante 2 casas decimais
-            maximumFractionDigits: 2  // Garante 2 casas decimais
-        });
-
-        // Define o conteúdo da célula dos proventos da Parc Risco Agregados, formatando o valor como moeda brasileira
-        parcRiscoAgregadosCell.textContent = totalParcRiscoAgregados.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2, // Garante 2 casas decimais
-            maximumFractionDigits: 2  // Garante 2 casas decimais
-        });
-
-        // Define o conteúdo da célula dos proventos da Parc Risco Dependente, formatando o valor como moeda brasileira
-        parcRiscoDependenteCell.textContent = totalParcRiscoDependente.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2, // Garante 2 casas decimais
-            maximumFractionDigits: 2  // Garante 2 casas decimais
-        });
+        titularCell.textContent = totalTitular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        conjugeCell.textContent = totalConjuge.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        agregadoJovemCell.textContent = totalAgregadoJovem.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        agregadoMaiorCell.textContent = totalAgregadoMaior.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        dependenteCell.textContent = totalDependente.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        planservEspecialCell.textContent = totalPlanservEspecial.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        coparticipacaoCell.textContent = totalCoparticipacao.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        parcRiscoTitularCell.textContent = totalParcRiscoTitular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        parcRiscoConjugeCell.textContent = totalParcRiscoConjuge.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        parcRiscoAgregadosCell.textContent = totalParcRiscoAgregados.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        parcRiscoDependenteCell.textContent = totalParcRiscoDependente.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        restituicaoPlanservCell.textContent = totalRestituicaoPlanserv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        planservRetroativoCell.textContent = totalPlanservRetroativo.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     });
 
-    // Limpa o conteúdo do container antes de adicionar a nova tabela
     container.innerHTML = '';
-
-    // Adiciona a tabela geral ao container
     container.appendChild(tabelaGeral);
 }
