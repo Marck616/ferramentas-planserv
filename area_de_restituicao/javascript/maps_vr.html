@@ -13,17 +13,17 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: black; /* Fundo preto */
+            background-color: black;
             overflow: hidden;
         }
         .container {
             display: flex;
-            gap: 40px; /* Espaço duplicado entre os contêineres */
+            gap: 40px;
         }
         .street-view-container {
-            width: 400px; /* Largura fixa para formato quadrado */
-            height: 400px; /* Altura fixa para formato quadrado */
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Sombra sutil */
+            width: 400px;
+            height: 400px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
         #street-view-1, #street-view-2 {
             width: 100%;
@@ -36,6 +36,7 @@
             transform: translateX(-50%);
             display: flex;
             gap: 10px;
+            z-index: 1000;
         }
         .controls button {
             padding: 10px 20px;
@@ -48,6 +49,11 @@
         }
         .controls button:hover {
             background-color: #0056b3;
+        }
+        /* Estilo para modo tela cheia */
+        :fullscreen .street-view-container {
+            width: 100vw;
+            height: 100vh;
         }
     </style>
 </head>
@@ -63,6 +69,7 @@
     </div>
 
     <div class="controls">
+        <button id="fullscreen-button" onclick="toggleFullscreen()">Tela Cheia</button>
         <button id="sync-button" onclick="toggleSync()">Ativar Sincronização</button>
         <button onclick="resetViews()">Resetar Visualizações</button>
     </div>
@@ -76,57 +83,46 @@
         let syncInterval;
 
         function initStreetView() {
-            // Coordenadas do local (latitude e longitude)
             const location = { lat: -5.0668158, lng: -42.8132403 };
-
-            // Configurações do Street View
             const streetViewOptions = {
-                position: location, // Define a posição inicial
-                pov: { heading: 165, pitch: 0 }, // Define a direção e inclinação da câmera
-                zoom: 1, // Nível de zoom
+                position: location,
+                pov: { heading: 165, pitch: 0 },
+                zoom: 1,
             };
 
-            // Cria o primeiro Street View
             panorama1 = new google.maps.StreetViewPanorama(
-                document.getElementById("street-view-1"), // Elemento HTML onde o Street View será exibido
+                document.getElementById("street-view-1"),
                 streetViewOptions
             );
 
-            // Cria o segundo Street View
             panorama2 = new google.maps.StreetViewPanorama(
-                document.getElementById("street-view-2"), // Elemento HTML onde o Street View será exibido
+                document.getElementById("street-view-2"),
                 streetViewOptions
             );
         }
 
-        // Função para sincronizar as visualizações
         function syncViews() {
             const pov = panorama1.getPov();
             const position = panorama1.getPosition();
             const zoom = panorama1.getZoom();
 
-            // Sincroniza a direção e o zoom
             panorama2.setPov(pov);
             panorama2.setZoom(zoom);
 
-            // Sincroniza a posição (movimentação)
             if (!panorama2.getPosition().equals(position)) {
                 panorama2.setPosition(position);
             }
         }
 
-        // Função para ativar/desativar a sincronização automática
         function toggleSync() {
             const syncButton = document.getElementById("sync-button");
 
             if (isSyncing) {
-                // Desativa a sincronização
                 clearInterval(syncInterval);
                 syncButton.textContent = "Ativar Sincronização";
                 syncButton.style.backgroundColor = "#007bff";
             } else {
-                // Ativa a sincronização
-                syncInterval = setInterval(syncViews, 50); // Sincroniza a cada 50ms
+                syncInterval = setInterval(syncViews, 50);
                 syncButton.textContent = "Desativar Sincronização";
                 syncButton.style.backgroundColor = "#dc3545";
             }
@@ -134,7 +130,6 @@
             isSyncing = !isSyncing;
         }
 
-        // Função para resetar as visualizações
         function resetViews() {
             const location = { lat: -5.0668158, lng: -42.8132403 };
             const streetViewOptions = {
@@ -151,7 +146,35 @@
             panorama2.setPov(streetViewOptions.pov);
             panorama2.setZoom(streetViewOptions.zoom);
         }
-    </script>
 
+        // Função para alternar o modo de tela cheia
+        function toggleFullscreen() {
+            const fullscreenButton = document.getElementById("fullscreen-button");
+            
+            if (!document.fullscreenElement) {
+                // Entrar em tela cheia
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Erro ao tentar entrar em tela cheia: ${err.message}`);
+                });
+                fullscreenButton.textContent = "Sair da Tela Cheia";
+            } else {
+                // Sair da tela cheia
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    fullscreenButton.textContent = "Tela Cheia";
+                }
+            }
+        }
+
+        // Atualiza o texto do botão quando o modo de tela cheia muda
+        document.addEventListener('fullscreenchange', () => {
+            const fullscreenButton = document.getElementById("fullscreen-button");
+            if (document.fullscreenElement) {
+                fullscreenButton.textContent = "Sair da Tela Cheia";
+            } else {
+                fullscreenButton.textContent = "Tela Cheia";
+            }
+        });
+    </script>
 </body>
 </html>
