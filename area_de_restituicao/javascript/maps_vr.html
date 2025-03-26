@@ -2,81 +2,104 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Street View para VR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Street View VR</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: black;
+            background-color: #000;
             overflow: hidden;
+            touch-action: none;
         }
-        .container {
+        .main-container {
             display: flex;
-            gap: 100px; /* Espaço entre as caixas */
-            margin: 0 100px; /* Bordas laterais = mesma largura do gap */
+            gap: 100px;
+            margin: 0 100px;
+            perspective: 1000px;
+        }
+        .view-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px; /* Espaço reduzido entre view e botões */
         }
         .street-view-container {
-            width: 300px; /* Largura reduzida para VR */
-            height: 300px; /* Altura reduzida para VR */
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            width: 300px;
+            height: 250px;
+            border-radius: 5px;
+            overflow: hidden;
         }
         #street-view-1, #street-view-2 {
             width: 100%;
             height: 100%;
         }
         .controls {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
             display: flex;
-            gap: 10px;
-            z-index: 1000;
+            gap: 8px; /* Espaço menor entre botões */
         }
         .controls button {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 6px 10px; /* Botões bem menores */
+            font-size: 10px; /* Fonte reduzida */
             cursor: pointer;
-            background-color: #007bff;
+            background-color: rgba(0, 123, 255, 0.7);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
+            min-width: 60px; /* Largura mínima consistente */
+            transition: all 0.1s ease;
         }
         .controls button:hover {
-            background-color: #0056b3;
+            background-color: rgba(0, 86, 179, 0.8);
         }
+        .controls button:active {
+            transform: scale(0.95);
+        }
+        
         /* Ajustes para modo tela cheia */
-        :fullscreen .container {
+        :fullscreen .main-container {
             margin: 0;
             gap: 100px;
         }
         :fullscreen .street-view-container {
-            width: calc(50vw - 100px); /* Ajuste proporcional na tela cheia */
-            height: calc(100vh - 100px);
+            width: calc(50vw - 100px);
+            height: calc(80vh - 100px);
+        }
+        :fullscreen .controls button {
+            padding: 8px 12px;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="street-view-container">
-            <div id="street-view-1"></div>
+    <div class="main-container">
+        <div class="view-column">
+            <div class="street-view-container">
+                <div id="street-view-1"></div>
+            </div>
+            <div class="controls">
+                <button onclick="toggleFullscreen()">Tela Cheia</button>
+                <button onclick="toggleSync()">Sincronizar</button>
+                <button onclick="resetViews()">Resetar</button>
+            </div>
         </div>
-        <div class="street-view-container">
-            <div id="street-view-2"></div>
+        
+        <div class="view-column">
+            <div class="street-view-container">
+                <div id="street-view-2"></div>
+            </div>
+            <div class="controls">
+                <button onclick="toggleFullscreen()">Tela Cheia</button>
+                <button onclick="toggleSync()">Sincronizar</button>
+                <button onclick="resetViews()">Resetar</button>
+            </div>
         </div>
-    </div>
-
-    <div class="controls">
-        <button id="fullscreen-button" onclick="toggleFullscreen()">Tela Cheia</button>
-        <button id="sync-button" onclick="toggleSync()">Ativar Sincronização</button>
-        <button onclick="resetViews()">Resetar Visualizações</button>
     </div>
 
     <!-- Carrega a API do Google Maps JavaScript com sua chave -->
@@ -93,6 +116,9 @@
                 position: location,
                 pov: { heading: 165, pitch: 0 },
                 zoom: 1,
+                disableDefaultUI: true,
+                showRoadLabels: false,
+                addressControl: false
             };
 
             panorama1 = new google.maps.StreetViewPanorama(
@@ -120,19 +146,22 @@
         }
 
         function toggleSync() {
-            const syncButton = document.getElementById("sync-button");
-
-            if (isSyncing) {
-                clearInterval(syncInterval);
-                syncButton.textContent = "Ativar Sincronização";
-                syncButton.style.backgroundColor = "#007bff";
-            } else {
-                syncInterval = setInterval(syncViews, 50);
-                syncButton.textContent = "Desativar Sincronização";
-                syncButton.style.backgroundColor = "#dc3545";
-            }
-
             isSyncing = !isSyncing;
+            const syncButtons = document.querySelectorAll('.controls button:nth-child(2)');
+            
+            if (isSyncing) {
+                syncInterval = setInterval(syncViews, 30);
+                syncButtons.forEach(btn => {
+                    btn.textContent = "✓ Sinc";
+                    btn.style.backgroundColor = "rgba(40, 167, 69, 0.7)";
+                });
+            } else {
+                clearInterval(syncInterval);
+                syncButtons.forEach(btn => {
+                    btn.textContent = "Sincronizar";
+                    btn.style.backgroundColor = "rgba(0, 123, 255, 0.7)";
+                });
+            }
         }
 
         function resetViews() {
@@ -152,32 +181,32 @@
             panorama2.setZoom(streetViewOptions.zoom);
         }
 
-        // Função para alternar o modo de tela cheia
         function toggleFullscreen() {
-            const fullscreenButton = document.getElementById("fullscreen-button");
-            
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
                     console.error(`Erro ao tentar entrar em tela cheia: ${err.message}`);
                 });
-                fullscreenButton.textContent = "Sair da Tela Cheia";
             } else {
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
-                    fullscreenButton.textContent = "Tela Cheia";
                 }
             }
         }
 
-        // Atualiza o texto do botão quando o modo de tela cheia muda
-        document.addEventListener('fullscreenchange', () => {
-            const fullscreenButton = document.getElementById("fullscreen-button");
+        document.addEventListener('fullscreenchange', updateButtonTexts);
+        
+        function updateButtonTexts() {
+            const fullscreenButtons = document.querySelectorAll('.controls button:first-child');
             if (document.fullscreenElement) {
-                fullscreenButton.textContent = "Sair da Tela Cheia";
+                fullscreenButtons.forEach(btn => {
+                    btn.textContent = "Sair";
+                });
             } else {
-                fullscreenButton.textContent = "Tela Cheia";
+                fullscreenButtons.forEach(btn => {
+                    btn.textContent = "Tela Cheia";
+                });
             }
-        });
+        }
     </script>
 </body>
 </html>
