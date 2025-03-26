@@ -18,11 +18,12 @@
         }
         .container {
             display: flex;
-            gap: 40px;
+            gap: 40px; /* Espaço entre as caixas */
+            margin: 0 40px; /* Bordas laterais = mesma largura do gap */
         }
         .street-view-container {
-            width: 400px;
-            height: 400px;
+            width: 300px; /* Largura reduzida para VR */
+            height: 300px; /* Altura reduzida para VR */
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
         #street-view-1, #street-view-2 {
@@ -50,10 +51,14 @@
         .controls button:hover {
             background-color: #0056b3;
         }
-        /* Estilo para modo tela cheia */
+        /* Ajustes para modo tela cheia */
+        :fullscreen .container {
+            margin: 0;
+            gap: 40px;
+        }
         :fullscreen .street-view-container {
-            width: 100vw;
-            height: 100vh;
+            width: calc(50vw - 40px); /* Ajuste proporcional na tela cheia */
+            height: calc(100vh - 40px);
         }
     </style>
 </head>
@@ -152,13 +157,11 @@
             const fullscreenButton = document.getElementById("fullscreen-button");
             
             if (!document.fullscreenElement) {
-                // Entrar em tela cheia
                 document.documentElement.requestFullscreen().catch(err => {
                     console.error(`Erro ao tentar entrar em tela cheia: ${err.message}`);
                 });
                 fullscreenButton.textContent = "Sair da Tela Cheia";
             } else {
-                // Sair da tela cheia
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
                     fullscreenButton.textContent = "Tela Cheia";
