@@ -3,26 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Street View VR Premium</title>
+    <title>VR Street View Configurável</title>
     <style>
+        /* Estilos gerais */
         body {
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
             background-color: #000;
             overflow: hidden;
             touch-action: none;
+            font-family: Arial, sans-serif;
+            color: white;
         }
+
+        /* Telas (menu, configuração, experiência) */
+        .screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #16213e 100%);
+            z-index: 100;
+            transition: opacity 0.5s ease;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Menu principal */
+        .menu-screen .title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
+        }
+
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        /* Tela de configuração */
+        .config-screen .config-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .input-group input {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .location-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        /* Botões */
+        .btn {
+            padding: 12px 24px;
+            font-size: 1rem;
+            background: rgba(0, 123, 255, 0.8);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            background: rgba(0, 86, 179, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Experiência VR */
+        .vr-experience {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .vr-experience.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
         .main-container {
             display: flex;
             gap: 100px;
             margin: 0 100px;
             perspective: 1000px;
         }
+
         .view-column {
             display: flex;
             flex-direction: column;
@@ -30,18 +157,21 @@
             gap: 15px;
             position: relative;
         }
+
         .street-view-container {
             width: 300px;
             height: 250px;
-            border-radius: 20px; /* Bordas mais arredondadas (oval suave) */
+            border-radius: 20px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
+
         #street-view-1, #street-view-2 {
             width: 100%;
             height: 100%;
         }
+
         .control-dot {
             position: absolute;
             bottom: 10px;
@@ -56,9 +186,11 @@
             align-items: center;
             transition: all 0.3s ease;
         }
+
         .control-dot:hover {
             background-color: rgba(150, 150, 150, 0.8);
         }
+
         .control-dot::after {
             content: "···";
             color: white;
@@ -66,6 +198,7 @@
             line-height: 1;
             margin-top: -4px;
         }
+
         .controls {
             display: none;
             position: absolute;
@@ -78,9 +211,11 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
         }
+
         .controls.visible {
             display: flex;
         }
+
         .controls button {
             padding: 6px 10px;
             font-size: 10px;
@@ -92,23 +227,45 @@
             min-width: 60px;
             transition: all 0.2s ease;
         }
+
         .controls button:hover {
             background-color: rgba(0, 86, 179, 0.9);
         }
+
         .controls button:active {
             transform: scale(0.95);
         }
-        
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            z-index: 1000;
+            display: none;
+        }
+
+        .vr-experience.active .back-btn {
+            display: block;
+        }
+
         /* Ajustes para modo tela cheia */
         :fullscreen .main-container {
             margin: 0;
             gap: 100px;
         }
+
         :fullscreen .street-view-container {
             width: calc(50vw - 100px);
             height: calc(80vh - 100px);
             border-radius: 25px;
         }
+
         :fullscreen .controls button {
             padding: 8px 12px;
             font-size: 12px;
@@ -116,46 +273,178 @@
     </style>
 </head>
 <body>
-
-    <div class="main-container">
-        <div class="view-column">
-            <div class="street-view-container">
-                <div id="street-view-1"></div>
-            </div>
-            <div class="control-dot" onclick="toggleControls(1)"></div>
-            <div class="controls" id="controls-1">
-                <button onclick="toggleFullscreen()">Tela Cheia</button>
-                <button onclick="toggleSync()">Sincronizar</button>
-                <button onclick="resetViews()">Resetar</button>
-            </div>
+    <!-- Tela de Menu Principal -->
+    <div class="screen menu-screen" id="menuScreen">
+        <h1 class="title">VR Street View</h1>
+        <div class="menu-options">
+            <button class="btn" onclick="showConfigScreen()">Iniciar Experiência</button>
+            <button class="btn btn-secondary" onclick="showInstructions()">Instruções</button>
+            <button class="btn btn-secondary" onclick="showAbout()">Sobre</button>
         </div>
-        
-        <div class="view-column">
-            <div class="street-view-container">
-                <div id="street-view-2"></div>
+    </div>
+
+    <!-- Tela de Configuração -->
+    <div class="screen config-screen hidden" id="configScreen">
+        <div class="config-form">
+            <h2 style="text-align: center; margin-bottom: 1rem;">Configurações</h2>
+            
+            <div class="input-group">
+                <label for="apiKey">Sua Chave API do Google Maps</label>
+                <input type="text" id="apiKey" placeholder="Insira sua chave API">
             </div>
-            <div class="control-dot" onclick="toggleControls(2)"></div>
-            <div class="controls" id="controls-2">
-                <button onclick="toggleFullscreen()">Tela Cheia</button>
-                <button onclick="toggleSync()">Sincronizar</button>
-                <button onclick="resetViews()">Resetar</button>
+            
+            <h3 style="margin: 1rem 0 0.5rem 0;">Localização Pré-definida</h3>
+            <div class="location-options">
+                <button class="btn btn-secondary" onclick="selectLocation(-23.5505, -46.6333, 'São Paulo')">São Paulo</button>
+                <button class="btn btn-secondary" onclick="selectLocation(-22.9068, -43.1729, 'Rio de Janeiro')">Rio de Janeiro</button>
+                <button class="btn btn-secondary" onclick="selectLocation(-15.7942, -47.8822, 'Brasília')">Brasília</button>
+                <button class="btn btn-secondary" onclick="selectLocation(-12.9714, -38.5014, 'Salvador')">Salvador</button>
+            </div>
+            
+            <h3 style="margin: 1rem 0 0.5rem 0;">Ou insira manualmente</h3>
+            <div class="input-group">
+                <label for="lat">Latitude</label>
+                <input type="text" id="lat" placeholder="Ex: -23.5505">
+            </div>
+            <div class="input-group">
+                <label for="lng">Longitude</label>
+                <input type="text" id="lng" placeholder="Ex: -46.6333">
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="backToMenu()">Voltar</button>
+                <button class="btn" style="flex: 2;" onclick="startExperience()">Iniciar VR</button>
             </div>
         </div>
     </div>
 
-    <!-- Carrega a API do Google Maps JavaScript com sua chave -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkY6n5G0Tuf7Y1uOH4fN_KUgngc2-q8hc&callback=initStreetView" async defer></script>
+    <!-- Experiência VR -->
+    <div class="vr-experience" id="vrExperience">
+        <button class="back-btn" onclick="backToConfig()">Voltar</button>
+        <div class="main-container">
+            <div class="view-column">
+                <div class="street-view-container">
+                    <div id="street-view-1"></div>
+                </div>
+                <div class="control-dot" onclick="toggleControls(1)"></div>
+                <div class="controls" id="controls-1">
+                    <button onclick="toggleFullscreen()">Tela Cheia</button>
+                    <button onclick="toggleSync()">Sincronizar</button>
+                    <button onclick="resetViews()">Resetar</button>
+                </div>
+            </div>
+            
+            <div class="view-column">
+                <div class="street-view-container">
+                    <div id="street-view-2"></div>
+                </div>
+                <div class="control-dot" onclick="toggleControls(2)"></div>
+                <div class="controls" id="controls-2">
+                    <button onclick="toggleFullscreen()">Tela Cheia</button>
+                    <button onclick="toggleSync()">Sincronizar</button>
+                    <button onclick="resetViews()">Resetar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
+        // Variáveis globais
         let panorama1, panorama2;
         let isSyncing = false;
         let syncInterval;
         let controlsVisible = false;
+        let currentLocation = { lat: -23.5505, lng: -46.6333 }; // Default: São Paulo
 
+        // Navegação entre telas
+        function showConfigScreen() {
+            document.getElementById('menuScreen').classList.add('hidden');
+            document.getElementById('configScreen').classList.remove('hidden');
+        }
+
+        function backToMenu() {
+            document.getElementById('configScreen').classList.add('hidden');
+            document.getElementById('menuScreen').classList.remove('hidden');
+        }
+
+        function backToConfig() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+            document.getElementById('vrExperience').classList.remove('active');
+            document.getElementById('configScreen').classList.remove('hidden');
+        }
+
+        // Seleção de localização
+        function selectLocation(lat, lng, name) {
+            currentLocation = { lat, lng };
+            document.getElementById('lat').value = lat;
+            document.getElementById('lng').value = lng;
+            alert(`Local selecionado: ${name}\nLat: ${lat}\nLng: ${lng}`);
+        }
+
+        // Inicia a experiência VR
+        function startExperience() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const latInput = document.getElementById('lat').value.trim();
+            const lngInput = document.getElementById('lng').value.trim();
+            
+            // Validações
+            if (!apiKey) {
+                alert("Por favor, insira sua chave API do Google Maps");
+                return;
+            }
+            
+            if (latInput && lngInput) {
+                const lat = parseFloat(latInput);
+                const lng = parseFloat(lngInput);
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    currentLocation = { lat, lng };
+                } else {
+                    alert("Por favor, insira coordenadas válidas");
+                    return;
+                }
+            }
+            
+            // Carrega a API com a chave do usuário
+            loadGoogleMapsAPI(apiKey, () => {
+                document.getElementById('configScreen').classList.add('hidden');
+                document.getElementById('vrExperience').classList.add('active');
+                initStreetView();
+            });
+        }
+
+        // Carrega a API do Google Maps dinamicamente
+        function loadGoogleMapsAPI(apiKey, callback) {
+            // Remove script anterior se existir
+            const oldScript = document.querySelector('script[src*="maps.googleapis.com"]');
+            if (oldScript) {
+                oldScript.remove();
+            }
+            
+            // Cria novo script
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initStreetView`;
+            script.async = true;
+            script.defer = true;
+            script.onload = callback;
+            document.head.appendChild(script);
+        }
+
+        // Mostra instruções
+        function showInstructions() {
+            alert("Instruções:\n\n1. Insira sua chave API do Google Maps\n2. Selecione uma localização pré-definida ou insira coordenadas\n3. Clique em 'Iniciar VR' para começar\n4. Use os pontos de controle para acessar opções\n\nPara obter uma chave API:\n1. Acesse Google Cloud Console\n2. Crie um projeto\n3. Ative a API Maps JavaScript\n4. Crie uma chave de API");
+        }
+
+        // Mostra informações sobre o projeto
+        function showAbout() {
+            alert("VR Street View Configurável\n\nVersão 2.0\n\nPermite usar sua própria chave API e selecionar qualquer localização\n\n© 2023 VR Experience");
+        }
+
+        // Inicializa o Street View
         function initStreetView() {
-            const location = { lat: -5.0668158, lng: -42.8132403 };
             const streetViewOptions = {
-                position: location,
+                position: currentLocation,
                 pov: { heading: 165, pitch: 0 },
                 zoom: 1,
                 disableDefaultUI: true,
@@ -174,6 +463,7 @@
             );
         }
 
+        // Sincroniza as visualizações
         function syncViews() {
             const pov = panorama1.getPov();
             const position = panorama1.getPosition();
@@ -187,12 +477,14 @@
             }
         }
 
+        // Alterna os controles
         function toggleControls(viewNumber) {
             controlsVisible = !controlsVisible;
             document.getElementById(`controls-1`).classList.toggle('visible', controlsVisible);
             document.getElementById(`controls-2`).classList.toggle('visible', controlsVisible);
         }
 
+        // Alterna a sincronização
         function toggleSync() {
             isSyncing = !isSyncing;
             const syncButtons = document.querySelectorAll('.controls button:nth-child(2)');
@@ -212,23 +504,24 @@
             }
         }
 
+        // Reseta as visualizações
         function resetViews() {
-            const location = { lat: -5.0668158, lng: -42.8132403 };
             const streetViewOptions = {
-                position: location,
+                position: currentLocation,
                 pov: { heading: 165, pitch: 0 },
                 zoom: 1,
             };
 
-            panorama1.setPosition(location);
+            panorama1.setPosition(currentLocation);
             panorama1.setPov(streetViewOptions.pov);
             panorama1.setZoom(streetViewOptions.zoom);
 
-            panorama2.setPosition(location);
+            panorama2.setPosition(currentLocation);
             panorama2.setPov(streetViewOptions.pov);
             panorama2.setZoom(streetViewOptions.zoom);
         }
 
+        // Alterna tela cheia
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
@@ -242,6 +535,7 @@
             toggleControls(); // Fecha os controles ao alternar tela cheia
         }
 
+        // Atualiza textos dos botões quando muda o modo tela cheia
         document.addEventListener('fullscreenchange', updateButtonTexts);
         
         function updateButtonTexts() {
