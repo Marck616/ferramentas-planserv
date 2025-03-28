@@ -1,53 +1,47 @@
-/* Reset e ajustes gerais */
 * {
-    margin: 1px;
-    padding: 1px;
-}
+    margin: 1px; /* Remove a margem padrão do corpo */
+    padding: 1px; /* Remove o preenchimento padrão do corpo */
+} /* Reseta os modelos padrãos do navegado*/
 
 .redirecionar {
-    color: #ff4500; /* Laranja vibrante */
-    font-weight: bold;
-    text-decoration: underline;
-}
+    color: red;
+    text-decoration: underline; /*sublinhado*/
+} /* Usar para destacar os elementos que quando clicados abrem outras abas*/
 
 body {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-    height: 100vh;
-    box-sizing: border-box;
-    background: linear-gradient(45deg, #97a6ff, #dcdfff, #e9ebff, #f4f4ff, #ffffff);
-    background-size: 400% 400%;
-    animation: carnaval-bg 10s infinite linear;
-    color: #ffffff;
-    text-align: center;
-}
-
-@keyframes carnaval-bg {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    font-family: Arial, sans-serif; /* Define a fonte padrão como Arial ou uma genérica sans-serif */
+    height: 100vh; /*garante que o conteudo da pagina use 100% da altura da tela */
+    box-sizing: border-box; /* ganrante que os componentes filhos não extrapolem o limite para os componetes pai*/
+    background-color: #f4f4f9;
+    color: black;
+    text-align: center; /*alinhar o texto horizontalmente ao centro do elemento que o contém*/
 }
 
 strong {
-    color: #ff1493;
+    color: #red;
 }
 
 input[type="text"], input[type="number"] {
     width: 200px;
     padding: 10px;
     margin: 5px;
-    border: 2px solid #ff1493;
     border-radius: 10px;
-    background-color: #fffae6;
-    color: #ff4500;
     font-weight: bold;
 }
+/*
+   Campos de entrada de texto e número são estilizados com largura fixa, padding e margem.
+   A borda é rosa vibrante, com cantos arredondados, e o fundo é um amarelo claro (#fffae6).
+   O texto dentro dos campos é laranja e em negrito.
+*/
 
+
+/* Estiliza os botões */
 button {
-    border: 2px solid #ffd700;
+    border: 2px solid black;
     border-radius: 10px;
     font-size: 18px;
     padding: 12px 20px;
-    background: linear-gradient(45deg, #0000ff, #c2bfff);
+    background: linear-gradient(45deg, #0000ff, #6861ff);
     color: white;
     font-weight: bold;
     cursor: pointer;
@@ -56,8 +50,12 @@ button {
 
 button:hover {
     transform: scale(1.1);
-    background: linear-gradient(45deg, #0000ff, #c2bfff);
+    background: linear-gradient(45deg, #6861ff, #0000ff);
 }
+/*
+   Ao passar o mouse sobre um botão, ele aumenta ligeiramente de tamanho (scale(1.1))
+   e o gradiente de fundo é mantido, mas poderia ser alterado para outro efeito.
+*/
 
 #teclado {
     display: flex;
@@ -66,72 +64,86 @@ button:hover {
     gap: 10px;
 }
 
-h2, #result h2 {
-    color: #ff0;
-    text-shadow: 2px 2px 5px #ff4500;
-    animation: pisca 1s infinite alternate;
+
+#result h2 {
+  color: green;
 }
 
-h3, #values h3 {
-    color: #00ced1;
+h2 {
+  color: green;
 }
 
-@keyframes pisca {
-    0% { opacity: 1; }
-    100% { opacity: 0.5; }
+#values h3 {
+    color: red;
 }
 
 .destaque_vermelho {
-    color: #ff0000 !important;
-    font-weight: bold;
+    color: red !important;
 }
 
-/* MENU MINIMIZÁVEL */
+
+/* MENU MINIMIZAVEL */
+
+/* Container do menu */
 .menu-container {
-    position: relative;
+  position: relative;
 }
 
+
+/* Botão do menu */
 .menu-toggle {
-    background: linear-gradient(45deg, #ff1493, #00ced1);
-    color: #fff;
-    padding: 12px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    border-radius: 10px;
-    font-weight: bold;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
 }
 
+
+/* Lista do menu (estilo inicial oculto) */
 .menu-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: none;
-    background: linear-gradient(45deg, #32cd32, #ff4500);
-    position: absolute;
-    top: 50px;
-    left: 0;
-    width: 300px;
-    border-radius: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: none; /* Escondido por padrão */
+  background-color: #333;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 600px; /* é usada para definir a largura de um elemento, controlando o espaço horizontal que ele ocupa. */
+  border: 1px solid #444;
 }
+
 
 .menu-list li {
-    border-bottom: 1px solid #fff;
+  border-bottom: 2px solid #fff;
 }
 
+.menu-list li:last-child {
+  border-bottom: none;
+}
+
+/* Botões internos no menu */
 .menu-list a {
-    display: block;
-    padding: 10px 20px;
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
+  display: block;
+  padding: 10px 20px;
+  color: #fff;
+  text-decoration: none;
 }
 
+/* Efeito hover nos links do menu */
 .menu-list a:hover {
-    background: #ffd700;
-    color: #ff4500;
+    background: #111854;
+    color: #c4c4c4;
+}
+
+/* Classe para mostrar o menu */
+.menu-list.hidden {
+  display: none; /* Garantir que o menu começa oculto */
 }
 
 .menu-list.visible {
-    display: block;
+  display: block;
+
 }
