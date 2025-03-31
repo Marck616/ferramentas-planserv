@@ -8,6 +8,7 @@
       "PLANSERV ESPECIAL",
       "CO-PARTICIPAÇÃO PLANSERV",
       "BRUTO PLANSERV",
+      "PLANSERV PARCELA DE RISCO AGREGADO MENOR"
     ];
     let parsedData = [];
 
