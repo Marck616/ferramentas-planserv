@@ -168,7 +168,8 @@
         "DIFERENCA DE NIVEL",
         "DIF CRÉDITO - DIFERENÇA DE VENCIMENTOS",
         "DIFERENCA ANUENIO",
-        "ADICIONAL FUNCAO"
+        "ADICIONAL FUNCAO",
+        "CET GEST LEI 13806/17"
       ];
 
       const valueRegex = /\d{1,3}(\.\d{3})*,\d{2}/g;
