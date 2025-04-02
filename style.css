@@ -155,12 +155,3 @@ h2 {
 
 
 
-
-/* CONTROLE DAS TABELAS */
-/* Estilo para todas as tabelas */
-table {
-  border-collapse: separate; /* ou 'collapse' para bordas unidas */
-  border-spacing: 10px; /* espaçamento horizontal e vertical entre células */
-}
-
-
